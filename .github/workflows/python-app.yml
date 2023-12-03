@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - dev/autoconspect
   pull_request:
     types: [opened, synchronize]
 
