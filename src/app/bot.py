@@ -86,9 +86,21 @@ async def send_video2text(message):
 
         # Part 3 - convert audio to text (TODO: Logging files, artifacts, masseges and clear cache )
         text = audio2text(path_audio)
-        text = "*Конспект видео: 📚*\n" + text
+
+        bot_msg = await bot.edit_message_text(
+            chat_id=message.chat.id,
+            message_id=bot_msg.message_id,
+            text="Оформляю конспект... 📒",
+        )
+        await bot.send_chat_action(message.chat.id, "typing")
+
+        text = chatgpt(text)
+        text = "*Конспект видео:* 📚\n" + text
         await bot.edit_message_text(
-            chat_id=message.chat.id, message_id=bot_msg.message_id, text=text
+            chat_id=message.chat.id,
+            message_id=bot_msg.message_id,
+            text=text,
+            parse_mode="markdown",
         )
     except Exception as e:
         await bot.reply_to(message, f"Что-то пошло не так! 😢, \n {e}")
