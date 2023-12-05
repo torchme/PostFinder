@@ -3,7 +3,6 @@ import asyncio
 import logging
 import os
 from pathlib import Path
-from moviepy.editor import VideoFileClip
 
 from dotenv import load_dotenv
 from moviepy.editor import *
@@ -66,7 +65,7 @@ async def send_video2text(message):
         await bot.send_chat_action(message.chat.id, "typing")
 
         # Part 2 - convert video to audio (TODO: Split parts code to app.py)
-        video = VideoFileClip(path_video)
+        video = VideoFileClip(path_video) # type: ignore
         # Making directory for user like: src/artifacts/user_id/audios/....mp3
         path_audio = os.path.join(
             os.getcwd(),
