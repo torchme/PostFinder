@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from openai import Audio, OpenAI
+from openai import Audio, OpenAI # type: ignore
 
 dotenv_path = Path(".env")
 load_dotenv(dotenv_path=dotenv_path)
