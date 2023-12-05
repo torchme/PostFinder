@@ -44,8 +44,8 @@ jobs:
       - name: Lint with isort
         run: poetry run isort . 
         
-      # - name: Lint with pylint
-      #   run: poetry run pylint --disable=C0114,C0115,C0116,C0301,C0411,W291,W0311 $(find . -type f -name "*.py" ! -path "./venv/*")
+      - name: Lint with pylint
+        run: poetry run pylint --disable=C0114,C0115,C0116,C0301,C0411,W291,W0311 $(find . -type f -name "*.py" ! -path "./venv/*")
 
       - name: Type check with mypy
         run: poetry run mypy .
