@@ -1,0 +1,35 @@
+[MASTER]
+ignore-patterns=venv/
+
+[MESSAGES CONTROL]
+disable=
+    C0111, # missing-docstring
+    C0103, # invalid-name
+    R1705, # no-else-return
+    C0114,
+    C0115,
+    C0116,  
+    C0301,
+    C0411,
+    W291,
+    W0311
+
+[REPORTS]
+score=yes
+
+[DESIGN]
+max-args=10
+max-locals=15
+max-returns=6
+max-branches=12
+max-statements=50
+max-parents=7
+max-attributes=10
+min-public-methods=0
+max-public-methods=20
+
+[TYPECHECK]
+generated-members=requests.*
+
+[FORMAT]
+max-line-length=120
