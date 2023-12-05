@@ -12,7 +12,26 @@ disable=
     C0301,
     C0411,
     W291,
-    W0311
+    W0311,
+    arguments-differ,
+    bad-inline-option,
+    deprecated-pragma,
+    duplicate-code,
+    file-ignored,
+    invalid-envvar-default,
+    invalid-name,
+    locally-disabled,
+    logging-fstring-interpolation,
+    missing-class-docstring,
+    missing-function-docstring,
+    missing-module-docstring,
+    no-member,
+    raise-missing-from,
+    raw-checker-failed,
+    suppressed-message,
+    unused-argument,
+    use-implicit-booleaness-not-comparison,
+    use-symbolic-message-instead        
 
 [REPORTS]
 score=yes
