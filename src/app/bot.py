@@ -3,6 +3,7 @@ import asyncio
 import logging
 import os
 from pathlib import Path
+from moviepy.editor import VideoFileClip
 
 from dotenv import load_dotenv
 from moviepy.editor import *
