@@ -8,10 +8,9 @@ disable=
     R1705, # no-else-return
     C0114,
     C0115,
-    C0116,  
+    C0116,
     C0301,
     C0411,
-    W291,
     W0311,
     arguments-differ,
     bad-inline-option,
@@ -21,7 +20,7 @@ disable=
     invalid-envvar-default,
     invalid-name,
     locally-disabled,
-    logging-fstring-interpolation,
+    logging-format-interpolation,
     missing-class-docstring,
     missing-function-docstring,
     missing-module-docstring,
@@ -31,7 +30,7 @@ disable=
     suppressed-message,
     unused-argument,
     use-implicit-booleaness-not-comparison,
-    use-symbolic-message-instead        
+    use-symbolic-message-instead
 
 [REPORTS]
 score=yes
