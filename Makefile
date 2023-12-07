@@ -1,6 +1,6 @@
 VENV := .venv
 
-PROJECT := your_project_name
+PROJECT := PostFinder
 TESTS := tests
 
 # Prepare
