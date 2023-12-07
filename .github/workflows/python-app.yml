@@ -50,5 +50,5 @@ jobs:
       - name: Type check with mypy
         run: poetry run mypy .
 
-      # - name: Run tests
-      #   run: make test
+      - name: Run tests
+        run: make test
