@@ -1,8 +1,7 @@
 VENV := .venv
 
-PROJECT := src
+PROJECT := your_project_name
 TESTS := tests
-
 
 # Prepare
 
@@ -12,7 +11,6 @@ TESTS := tests
 
 setup: .venv
 
-
 # Clean
 
 clean:
@@ -20,26 +18,26 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf $(VENV)
 
-
 # Format
 
 isort_fix: .venv
 	poetry run isort $(PROJECT) $(TESTS)
 
-
-black_fix:
+black_fix: .venv
 	poetry run black $(PROJECT) $(TESTS)
 
 format: isort_fix black_fix
-
 
 # Lint
 
 isort: .venv
 	poetry run isort --check $(PROJECT) $(TESTS)
 
-.black:
+.black: .venv
 	poetry run black --check --diff $(PROJECT) $(TESTS)
+
+flake: .venv
+	poetry run flake8 $(PROJECT) $(TESTS)
 
 mypy: .venv
 	poetry run mypy $(PROJECT) $(TESTS)
@@ -47,19 +45,17 @@ mypy: .venv
 pylint: .venv
 	poetry run pylint $(PROJECT) $(TESTS)
 
-lint: isort mypy pylint
-
+lint: isort .black flake mypy pylint
 
 # Test
 
-.pytest:
+.pytest: .venv
 	poetry run pytest $(TESTS)
 
-test: .venv .pytest
-
+test: .pytest
 
 # All
 
-all: setup format lint test run
+all: setup format lint test
 
 .DEFAULT_GOAL = all
