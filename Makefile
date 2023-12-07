@@ -1,6 +1,6 @@
 VENV := .venv
 
-PROJECT := PostFinder
+PROJECT := kc-chatbot
 TESTS := tests
 
 # Prepare
