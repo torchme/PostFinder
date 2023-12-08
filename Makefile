@@ -1,7 +1,7 @@
 VENV := .venv
 
 PROJECT := kc-chatbot
-TESTS := tests
+TESTS := tests/
 
 # Prepare
 
