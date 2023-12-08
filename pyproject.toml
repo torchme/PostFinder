@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "kc-chatbot"
+name = "PostFinder"
 version = "0.1.0"
 description = ""
 authors = ["Torchme"]
@@ -21,6 +21,7 @@ mypy = "1.7.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
+
 
 [build-system]
 requires = ["poetry-core"]
