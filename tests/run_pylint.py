@@ -1,7 +1,7 @@
 import subprocess
 import re
 
-def get_pylint_score():
+def get_pylint_score() -> float:
     """ Запустить pylint и вернуть его оценку. """
     result = subprocess.run(['pylint', 'PostFinder'], capture_output=True, text=True)
 
