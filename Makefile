@@ -50,7 +50,7 @@ lint: isort .black flake mypy pylint
 # Test
 
 .pytest: .venv
-	poetry run pytest $(TESTS) -vv
+	pytest $(TESTS) -vv
 
 test: .pytest
 
