@@ -1,7 +1,8 @@
 import subprocess
 import re
+from typing import Tuple
 
-def get_pylint_score():
+def get_pylint_score() -> Tuple[float, str]:
     """ Run pylint and return its score and output. """
     result = subprocess.run(['pylint', 'PostFinder'], capture_output=True, text=True)
 
@@ -15,7 +16,3 @@ def get_pylint_score():
     if match:
         return float(match.group(1)) / 10, result.stdout
     raise ValueError("Failed to get pylint evaluation")
-
-if __name__ == "__main__":
-    score, output = get_pylint_score()
-    print(f"Pylint score: {score}")
