@@ -39,7 +39,10 @@ def chatgpt(prompt: str) -> str:
             {"role": "user", "content": "Верни результат в MarkDown разметке" + prompt},
         ],
     )
-    return chat_completion.choices[0].message.content
+    message_content = chat_completion.choices[0].message.content
+    if message_content is None:
+        raise ValueError("Ответ от API пустой или некорректный")
+    return message_content
 
 
 def audio2text(audio_path: str) -> str:

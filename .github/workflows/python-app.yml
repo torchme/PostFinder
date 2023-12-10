@@ -39,13 +39,13 @@ jobs:
         run: poetry install
 
       - name: Lint with Black
-        run: poetry run black . 
+        run: poetry run black .
 
       - name: Lint with isort
-        run: poetry run isort . 
-        
+        run: poetry run isort .
+
       - name: Lint with pylint
-        run: poetry run pylint src/ --fail-under=7.5 --output-format=colorized || exit 1
+        run: poetry run pylint src/ --fail-under=7.5 --rcfile=.pylintrc --output-format=colorized || exit 1
 
       - name: Type check with mypy
         run: poetry run mypy .
