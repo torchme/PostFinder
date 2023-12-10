@@ -1,14 +1,12 @@
-# TODO: TELEGRAM BOT THERE
 import asyncio
-import logging
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from moviepy.editor import *
+from moviepy.editor import VideoFileClip
 from telebot.async_telebot import AsyncTeleBot
 
-from app import audio2text, chatgpt
+from .openai import audio2text, chatgpt
 
 dotenv_path = Path(".env")
 load_dotenv(dotenv_path=dotenv_path)
@@ -65,7 +63,7 @@ async def send_video2text(message):
         await bot.send_chat_action(message.chat.id, "typing")
 
         # Part 2 - convert video to audio (TODO: Split parts code to app.py)
-        video = VideoFileClip(path_video)
+        video = VideoFileClip(path_video)  # type: ignore
         # Making directory for user like: src/artifacts/user_id/audios/....mp3
         path_audio = os.path.join(
             os.getcwd(),

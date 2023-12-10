@@ -1,11 +1,10 @@
-import logging
 import os
 import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 from loguru import logger
-from openai import Audio, OpenAI
+from openai import OpenAI
 from pydub import AudioSegment
 
 dotenv_path = Path(".env")
@@ -25,7 +24,7 @@ logger.add(
 def chatgpt(prompt: str) -> str:
     chat_completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        # Add multiple aggents to generate quastions
+        # TODO: Add multiple aggents to generate quastions
         messages=[
             {
                 "role": "system",
