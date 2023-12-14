@@ -159,4 +159,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-*.lock
+# Voice/Video Artifacts
+src/artifacts/*
+*.mp3
+*.mp4
+*.avi
