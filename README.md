@@ -112,3 +112,12 @@ Define and link to business or technical terms.
 ### 7.6. References
 
 Add references that you might have consulted for your methodology.
+
+## 8. Contributors 
+
+<a href="https://github.com/dimages">
+<img src="https://github.com/dimages.png?size=50" title="dimages"></a>&nbsp;
+<a href="https://github.com/torchme">
+<img src="https://github.com/torchme.png?size=50" height="50" title="torchme"></a>&nbsp;
+<a href="https://github.com/gr3eda1g0">
+<img src="https://github.com/gr3eda1g0.png?size=50" title="gr3eda1g0"></a>
