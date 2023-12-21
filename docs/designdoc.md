@@ -220,3 +220,6 @@
 <img src="https://github.com/gr3eda1g0.png?size=50" title="gr3eda1g0"></a>
 
 ## 6. Благодарности
+
+## 7. Допольнительные документы
+- https://miro.com/app/board/uXjVNHC6K44=/
