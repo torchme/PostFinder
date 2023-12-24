@@ -13,7 +13,7 @@ class PostFinderBot:
 
     async def start(self):
         await dp.start_polling(bot)
-    
+
     async def _startup_event(self):
         print("Bot started")
 
@@ -21,6 +21,6 @@ class PostFinderBot:
         print("Bot stopped")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     bot_runner = PostFinderBot()
     asyncio.run(bot_runner.start())
