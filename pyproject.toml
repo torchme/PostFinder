@@ -17,6 +17,8 @@ pydub = "^0.25.1"
 loguru = "^0.7.2"
 pandas = "2.0.3"
 telethon = "^1.33.1"
+aiogram = "^3.2.0"
+pyyaml = "^6.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
