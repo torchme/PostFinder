@@ -6,6 +6,7 @@ disable=
     C0111, # missing-docstring
     C0103, # invalid-name
     R1705, # no-else-return
+    E0401, # import-error
     C0114,
     C0115,
     C0116,
