@@ -1,4 +1,7 @@
-def validate_parse_command_args(args_str: str):
+from typing import Optional
+
+
+def validate_parse_command_args(args_str: Optional[str]):
     # If args_str is None or empty, return with an error message
     if not args_str:
         return (
