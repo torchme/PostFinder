@@ -48,7 +48,7 @@ jobs:
         run: poetry run pylint src/ --fail-under=7.5 --rcfile=.pylintrc --output-format=colorized || exit 1
 
       - name: Type check with mypy
-        run: poetry run mypy .
+        run: poetry run mypy src/ --explicit-package-bases
 
 #      - name: Run tests
 #        run: make test
