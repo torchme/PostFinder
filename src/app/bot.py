@@ -1,5 +1,8 @@
 import asyncio
 
+from aiogram.types import BotCommand
+from loguru import logger
+
 from src.app.loader import bot, dp
 from src.handlers.commands import router as router_commands
 
@@ -15,10 +18,20 @@ class PostFinderBot:
         await dp.start_polling(bot)
 
     async def _startup_event(self):
-        print("Bot started")
+        bot_commands = [
+            BotCommand(command="/help", description="Get info about me"),
+            BotCommand(
+                command="/parse",
+                description="Parse channel posts. Params: channel (str), limit (int)",
+            ),
+        ]
+        await bot.set_my_commands(bot_commands)
+
+        logger.info("Registered commands")
+        logger.info("Bot started")
 
     async def _shutdown_event(self):
-        print("Bot stopped")
+        logger.info("Bot stopped")
 
 
 if __name__ == "__main__":
