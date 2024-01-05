@@ -165,7 +165,6 @@
 
 ### 4. Внедрение `для production систем, если требуется`    
 
-  
 #### 4.1. Архитектура решения   
   
 - **[Блок схема](https://miro.com/app/board/uXjVNHC6K44=/)**
@@ -180,8 +179,8 @@
 - Отклик ~ 1ms
   
 #### 4.4. Безопасность данных   
-  
 - WIP
+  
 #### 4.5. Риски  
   
 - Отключение API различных сервисов
@@ -200,5 +199,7 @@
 <img src="https://github.com/mayb333.png?size=50" title="mayb333"></a>
 
 ## 6. Благодарности
+- **[Karpov Courses](https://karpov.courses/simulator-ml)**
+- **[Reliable ML](https://t.me/reliable_ml/196)**
 
 ## 7. Допольнительные документы
