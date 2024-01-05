@@ -23,7 +23,6 @@ pytest = "^7.4.3"
 pre-commit = "^3.5.0"
 
 [tool.ruff]
-# Exclude a variety of commonly ignored directories.
 exclude = [
     ".bzr",
     ".direnv",

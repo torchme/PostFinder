@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from loguru import logger
 from openai import OpenAI
 
+
 dotenv_path = Path(".env")
 load_dotenv(dotenv_path=dotenv_path)
 PROXY_API_KEY = os.getenv("PROXY_API_KEY")

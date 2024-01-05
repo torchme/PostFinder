@@ -1,16 +1,18 @@
-from pathlib import Path
+import os
+import sys
 
 import yaml
 from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
-
+from loguru import logger
 from src.app.loader import client
 from src.handlers.utils.scrapper import scrape_messages
 from src.handlers.utils.validation import validate_parse_command_args
 
 router = Router()
 
-config_path = Path(__file__).parent.parent / "config" / "config.yaml"
+config_path = os.path.join(sys.path[0], "config/config.yaml")
+logger.info(config_path)
 
 
 @router.message(Command(commands=["start", "help"]))
@@ -26,7 +28,7 @@ async def send_welcome(message: types.Message):
 async def parse_channel(message: types.Message, command: CommandObject):
     args = command.args
     channel, limit, error_message = validate_parse_command_args(args)
-
+    output_file = os.path.join(sys.path[0], f"src/artifacts/{channel}.csv")
     if error_message:
         await message.answer(error_message)
         return
@@ -34,11 +36,16 @@ async def parse_channel(message: types.Message, command: CommandObject):
     msg = await message.answer("Parsing...")
 
     await scrape_messages(
-        client=client, channel=channel, output_file_path=f"{channel}.csv", limit=limit
+        client=client, channel=channel, output_file_path=output_file, limit=limit
     )
 
     await msg.edit_text("Successfully parsed channel!")
-    file_to_send = types.FSInputFile(f"{channel}.csv")
-    await message.answer_document(
-        document=file_to_send, caption="Here is the parsed data."
-    )
+    # file_to_send = types.FSInputFile(output_file)
+    # await message.answer_document(
+    #     document=file_to_send, caption="Here is the parsed data."
+    # )
+
+
+@router.message(Command(commands="find"))
+async def find_post(message: types.Message, command: CommandObject):
+    pass

@@ -7,14 +7,12 @@ async def scrape_messages(
     client: TelegramClient, channel: str, output_file_path: str, limit: int = 10_000
 ):
     """Scraping messages from telegram-channel"""
-    # Connect to the client
     await client.start()
 
     logger.info("Client for scrapping Created")
     logger.info("Scrapping...")
 
     result = []
-    # Accessing the channel
     async for message in client.iter_messages(channel, limit=limit):
         try:
             message_info = {

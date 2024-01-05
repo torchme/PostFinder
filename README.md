@@ -20,3 +20,13 @@ or
 ```
 pre-commit install
 ```
+
+## 2. Run
+
+### Add .env file with secret keys
+
+### Start bot
+
+```python
+python src/app/bot.py
+```

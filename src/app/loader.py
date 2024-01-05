@@ -1,7 +1,7 @@
 from aiogram import Bot, Dispatcher
 from telethon import TelegramClient
 
-from src.config import API_HASH, API_ID, TELEGRAM_BOT_TOKEN
+from ..config.config import API_HASH, API_ID, TELEGRAM_BOT_TOKEN
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
