@@ -164,3 +164,4 @@ src/artifacts/*
 *.mp3
 *.mp4
 *.avi
+.ruff_cache
