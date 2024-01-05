@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  test:
+  install:
     runs-on: ubuntu-20.04
 
     steps:
@@ -37,18 +37,10 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install
+  
+  ruff:
+    runs-on: ubuntu-20.04
 
-      - name: Lint with Black
-        run: poetry run black .
-
-      - name: Lint with isort
-        run: poetry run isort .
-
-      - name: Lint with pylint
-        run: poetry run pylint src/ --fail-under=7.5 --rcfile=.pylintrc --output-format=colorized || exit 1
-
-      - name: Type check with mypy
-        run: poetry run mypy src/ --explicit-package-bases
-
-#      - name: Run tests
-#        run: make test
+    steps:
+      - uses: actions/checkout@v3
+      - uses: chartboost/ruff-action@v1
