@@ -6,6 +6,10 @@
 ### python3.8
 
 ```
+pip install poetry
+
+pip install --upgrade pip
+
 poetry install
 ```
 
