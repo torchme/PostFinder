@@ -5,7 +5,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from loguru import logger
 from openai import OpenAI
-from pydub import AudioSegment
 
 dotenv_path = Path(".env")
 load_dotenv(dotenv_path=dotenv_path)
@@ -43,4 +42,3 @@ def chatgpt(prompt: str) -> str:
     if message_content is None:
         raise ValueError("Ответ от API пустой или некорректный")
     return message_content
-
