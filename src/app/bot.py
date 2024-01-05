@@ -9,15 +9,15 @@ from src.handlers.commands import router as router_commands
 
 class PostFinderBot:
     def __init__(self):
-        dp.startup.register(self._startup_event)
-        dp.shutdown.register(self._shutdown_event)
+        dp.startup.register(self.startup_event)
+        dp.shutdown.register(self.shutdown_event)
 
         dp.include_router(router_commands)
 
     async def start(self):
         await dp.start_polling(bot)
 
-    async def _startup_event(self):
+    async def startup_event(self):
         bot_commands = [
             BotCommand(command="/help", description="Get info about me"),
             BotCommand(
@@ -27,11 +27,11 @@ class PostFinderBot:
         ]
         await bot.set_my_commands(bot_commands)
 
-        logger.info("Registered commands")
-        logger.info("Bot started")
+        logger.warning("Registered commands")
+        logger.warning("Bot started")
 
-    async def _shutdown_event(self):
-        logger.info("Bot stopped")
+    async def shutdown_event(self):
+        logger.warning("Bot stopped")
 
 
 if __name__ == "__main__":

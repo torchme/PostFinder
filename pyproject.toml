@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "kc-chatbot"
+name = "POSTFINDER"
 version = "0.1.0"
 description = ""
 authors = ["Torchme"]
@@ -7,13 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pytelegrambotapi = "^4.14.0"
 python-dotenv = "^1.0.0"
 aiohttp = "^3.9.1"
 openai = "^1.3.7"
 pre-commit = "^3.5.0"
-moviepy = "^1.0.3"
-pydub = "^0.25.1"
 loguru = "^0.7.2"
 pandas = "2.0.3"
 telethon = "^1.33.1"
