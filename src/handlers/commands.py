@@ -4,14 +4,27 @@ import sys
 import yaml
 from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
+from langchain.prompts import PromptTemplate
+from langchain.vectorstores import Chroma
+from langchain_community.document_loaders.csv_loader import CSVLoader
 from loguru import logger
-from src.app.loader import client
+from src.app.loader import client, emb_fn, llm
 from src.handlers.utils.scrapper import scrape_messages
 from src.handlers.utils.validation import validate_parse_command_args
 
+__import__("pysqlite3")
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join("..", "db.sqlite3"),
+    }
+}
+
 router = Router()
 
-config_path = os.path.join(sys.path[0], "config/config.yaml")
+config_path = os.path.join(sys.path[0], "src/config/config.yaml")
 logger.info(config_path)
 
 
@@ -27,7 +40,7 @@ async def send_welcome(message: types.Message):
 @router.message(Command(commands="parse"))
 async def parse_channel(message: types.Message, command: CommandObject):
     args = command.args
-    channel, limit, error_message = validate_parse_command_args(args)
+    channel, context, limit, error_message = validate_parse_command_args(args)
     output_file = os.path.join(sys.path[0], f"src/artifacts/{channel}.csv")
     if error_message:
         await message.answer(error_message)
@@ -39,13 +52,26 @@ async def parse_channel(message: types.Message, command: CommandObject):
         client=client, channel=channel, output_file_path=output_file, limit=limit
     )
 
-    await msg.edit_text("Successfully parsed channel!")
-    # file_to_send = types.FSInputFile(output_file)
-    # await message.answer_document(
-    #     document=file_to_send, caption="Here is the parsed data."
-    # )
+    await msg.edit_text("Similar searching...")
 
+    loader = CSVLoader(
+        file_path=output_file,
+        source_column="text",
+        metadata_columns=["date", "message_id"],
+        csv_args={
+            "delimiter": ";",
+        },
+    )
+    data = loader.load()
+    chroma_db = Chroma.from_documents(data, emb_fn)
+    retriever = chroma_db.as_retriever()
+    docs = retriever.get_relevant_documents(context, search_kwargs={"k": 10})
+    context_text = "\n\n---\n\n".join([doc.page_content for doc in docs[::-1]])
 
-@router.message(Command(commands="find"))
-async def find_post(message: types.Message, command: CommandObject):
-    pass
+    QUERY_PROMPT = PromptTemplate(
+        input_variables=["question", "context"],
+        template="""Answer the question based on the context below. "\n\nContext: {context}\n\n---\n\nQuestion: {question}\nAnswer:""",
+    )
+
+    prompt = QUERY_PROMPT.format(context=context_text, question=context)
+    await msg.edit_text("Question: " + context + "\nAnswer: " + llm.predict(prompt))
