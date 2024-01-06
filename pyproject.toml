@@ -18,7 +18,7 @@ pyyaml = "^6.0.1"
 types-pyyaml = "^6.0.12.12"
 langchain = "^0.0.354"
 tiktoken = "^0.5.2"
-chromadb = "^0.4.22"
+chromadb = "^0.4.0"
 pysqlite3-binary = "^0.5.2.post2"
 
 [tool.poetry.group.dev.dependencies]
