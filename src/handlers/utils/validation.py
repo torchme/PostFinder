@@ -11,6 +11,6 @@ def validate_parse_command_args(args_str: Optional[str]):
     args = args_str.split()
     channel = args[0]
     context = " ".join(args[1:])
-    limit = 10000
+    limit = 100
 
     return channel, context, limit, ""
