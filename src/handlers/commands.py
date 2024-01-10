@@ -12,15 +12,15 @@ from src.app.loader import client, emb_fn, llm
 from src.handlers.utils.scrapper import scrape_messages
 from src.handlers.utils.validation import validate_parse_command_args
 
-__import__("pysqlite3")
-sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+# __import__("pysqlite3")
+# sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join("..", "db.sqlite3"),
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": os.path.join("..", "db.sqlite3"),
+#     }
+# }
 
 router = Router()
 

@@ -31,7 +31,7 @@ class PostFinderBot:
         logger.warning("Bot started")
 
     async def shutdown_event(self):
-        logger.info("Bot stopped")
+        logger.warning("Bot stopped")
 
 
 if __name__ == "__main__":
