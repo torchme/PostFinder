@@ -32,5 +32,5 @@ pre-commit install
 ### Start bot
 
 ```python
-python src/app/bot.py
+bash run_bot.sh
 ```
