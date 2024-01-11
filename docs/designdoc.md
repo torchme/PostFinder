@@ -169,4 +169,8 @@
 - **[Karpov Courses](https://karpov.courses/simulator-ml)**
 - **[Reliable ML](https://t.me/reliable_ml/196)**
 
+<<<<<<< HEAD
 ## 7. Дополнительные документы
+=======
+## 7. Допольнительные документы
+>>>>>>> 7ad55b6f22805be709629735c81f44981b3c8266
