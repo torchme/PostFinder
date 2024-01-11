@@ -34,3 +34,9 @@ pre-commit install
 ```python
 bash run_bot.sh
 ```
+
+or
+
+```
+python -m src.app.bot
+```
