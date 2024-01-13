@@ -12,6 +12,7 @@ def backup_database(
     user: str = DB_USER,
     dbname: str = DB_NAME,
 ):
+    """Create PostgreSQL database backup file"""
     date_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{backup_path}/backup_{dbname}_{date_str}.dump"
 
@@ -31,12 +32,13 @@ def restore_database(
     user: str = DB_USER,
     dbname: str = DB_NAME,
 ):
+    """Restore PostgreSQL database from backup file"""
     command = (
         f"pg_restore -h {host} -p {port} -U {user} -d {dbname} < {backup_filepath}"
     )
 
     try:
-        subprocess.run(command, shell=True)
+        subprocess.run(command, check=False, shell=True)
         logger.debug(f"Database restored successfully from {backup_filepath}")
     except subprocess.CalledProcessError as e:
         logger.error(f"Error during database restore: {e}")
