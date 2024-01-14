@@ -12,7 +12,9 @@ from src.config import API_HASH, API_ID, TELEGRAM_BOT_TOKEN, PROXY_API_KEY
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
-client = TelegramClient("post_finder", api_id=API_ID, api_hash=API_HASH)
+client = TelegramClient(
+    "sessions/post_finder.session", api_id=API_ID, api_hash=API_HASH
+)
 
 emb_fn = OpenAIEmbeddings(
     api_key=os.getenv("PROXY_API_KEY"),
