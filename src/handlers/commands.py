@@ -9,7 +9,7 @@ from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
 from langchain.prompts import PromptTemplate
 # from langchain.vectorstores import Chroma
-# new 240114пше 
+# new 240114
 from langchain_community.vectorstores import Chroma
 
 from langchain_community.document_loaders.csv_loader import CSVLoader
@@ -73,7 +73,7 @@ async def parse_channel(message: types.Message, command: CommandObject):
     # >>> new 240113
     # сохранение chroma в файл
     # файл
-    persistent_client = chromadb.PersistentClient(path=f"./chroma_db")
+    persistent_client = chromadb.PersistentClient(path="./chroma_db")
     # таблица
     chroma_collection = persistent_client.get_or_create_collection(
         name=channel, embedding_function=emb_fn,
