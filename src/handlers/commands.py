@@ -1,6 +1,9 @@
 import os
 import sys
 
+# new 240113
+import chromadb
+
 import yaml
 from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
@@ -63,7 +66,34 @@ async def parse_channel(message: types.Message, command: CommandObject):
         },
     )
     data = loader.load()
-    chroma_db = Chroma.from_documents(data, emb_fn)
+
+    # >>> new 240113
+    # сохранение chroma в файл
+    # файл
+    persistent_client = chromadb.PersistentClient(path=f"./chroma_db")
+    # таблица
+    chroma_collection = persistent_client.get_or_create_collection(
+        name=channel, embedding_function=emb_fn,
+        metadata={"hnsw:space": "cosine"}  # l2 is the default
+    )
+    # вместо
+    # chroma_db = Chroma.from_documents(data, emb_fn)
+    # добавляем документы в коллекцию chroma_collection
+    # PS: надо проверить, что data - это список 'строк'
+    chroma_collection.add(
+        documents=data,
+        metadatas=[{"source": "local"} for _ in data],  # from online example
+        ids=[f"id{i}" for i in range(len(data))]  # from online example
+    )
+
+    # теперь делаем LangChain Chroma
+    chroma_db = Chroma(
+        client=persistent_client,
+        collection_name=channel,
+        embedding_function=emb_fn
+    )
+    # <<< new 240113
+
     retriever = chroma_db.as_retriever()
     docs = retriever.get_relevant_documents(context, search_kwargs={"k": 10})
     context_text = "\n\n---\n\n".join([doc.page_content for doc in docs[::-1]])
