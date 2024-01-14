@@ -8,7 +8,10 @@ import yaml
 from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
 from langchain.prompts import PromptTemplate
-from langchain.vectorstores import Chroma
+# from langchain.vectorstores import Chroma
+# new 240114пше 
+from langchain_community.vectorstores import Chroma
+
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from loguru import logger
 from src.app.loader import client, emb_fn, llm
