@@ -5,7 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from loguru import logger
 from openai import OpenAI
-from pydub import AudioSegment
+
 
 dotenv_path = Path(".env")
 load_dotenv(dotenv_path=dotenv_path)
@@ -43,19 +43,3 @@ def chatgpt(prompt: str) -> str:
     if message_content is None:
         raise ValueError("Ответ от API пустой или некорректный")
     return message_content
-
-
-def audio2text(audio_path: str) -> str:
-    ten_minutes = 60 * 1000
-
-    song = AudioSegment.from_mp3(audio_path)
-    first_10_minutes = song[:ten_minutes]
-    # TODO: Split to minutes and save it in artifacts
-
-    first_10_minutes.export(audio_path, format="mp3")
-
-    with open(audio_path, "rb") as audio_file:
-        transcript = client.audio.transcriptions.create(
-            file=audio_file, model="whisper-1", response_format="text", language="ru"
-        )
-        return transcript.text
