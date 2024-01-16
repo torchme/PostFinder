@@ -22,8 +22,8 @@ class ChromaManager:
             collection_name=self.channel,
         )
 
-    def create_collection(self, docs: List[Document]) -> None:
-        self.collection.from_documents(
+    async def create_collection(self, docs: List[Document]) -> None:
+        await self.collection.afrom_documents(
             documents=docs,
             embedding=self.emb_fn,
             persist_directory=self.persist_directory,
@@ -52,15 +52,13 @@ class ChromaManager:
             )
             if new_data:
                 df = pd.DataFrame(new_data)
-                print(df)
                 docs = self.dataframe_to_documents(df)
-                self.collection.add_documents(docs)
+                await self.collection.aadd_documents(docs)
         else:
             initial_data = await scrape_telegram_messages(
                 client=client, channel=self.channel
             )
             if initial_data:
                 df = pd.DataFrame(initial_data)
-                print(df)
                 docs = self.dataframe_to_documents(df)
-                self.create_collection(docs)
+                await self.create_collection(docs)
