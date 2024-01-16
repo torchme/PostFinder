@@ -62,3 +62,9 @@ class ChromaManager:
                 df = pd.DataFrame(initial_data)
                 docs = self.dataframe_to_documents(df)
                 await self.create_collection(docs)
+
+        self.collection = Chroma(
+            persist_directory=self.persist_directory,
+            embedding_function=self.emb_fn,
+            collection_name=self.channel,
+        )
