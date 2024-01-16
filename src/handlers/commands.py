@@ -8,7 +8,7 @@ import yaml
 from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
 from langchain.prompts import PromptTemplate
-# from langchain.vectorstores import Chroma
+
 # new 240114
 from langchain_community.vectorstores import Chroma
 
@@ -76,8 +76,9 @@ async def parse_channel(message: types.Message, command: CommandObject):
     persistent_client = chromadb.PersistentClient(path="./chroma_db")
     # таблица
     chroma_collection = persistent_client.get_or_create_collection(
-        name=channel, embedding_function=emb_fn,
-        metadata={"hnsw:space": "cosine"}  # l2 is the default
+        name=channel,
+        embedding_function=emb_fn,
+        metadata={"hnsw:space": "cosine"},  # l2 is the default
     )
     # вместо
     # chroma_db = Chroma.from_documents(data, emb_fn)
@@ -86,14 +87,12 @@ async def parse_channel(message: types.Message, command: CommandObject):
     chroma_collection.add(
         documents=data,
         metadatas=[{"source": "local"} for _ in data],  # from online example
-        ids=[f"id{i}" for i in range(len(data))]  # from online example
+        ids=[f"id{i}" for i in range(len(data))],  # from online example
     )
 
     # теперь делаем LangChain Chroma
     chroma_db = Chroma(
-        client=persistent_client,
-        collection_name=channel,
-        embedding_function=emb_fn
+        client=persistent_client, collection_name=channel, embedding_function=emb_fn
     )
     # <<< new 240113
 
