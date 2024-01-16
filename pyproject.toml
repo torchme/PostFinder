@@ -24,6 +24,8 @@ sqlalchemy = "^2.0.25"
 alembic = "^1.13.1"
 asyncio = "^3.4.3"
 greenlet = "^3.0.3"
+pytest = "^7.4.4"
+pytest-asyncio = "^0.23.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
