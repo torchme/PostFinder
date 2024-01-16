@@ -10,16 +10,8 @@ from loguru import logger
 from src.app.loader import llm
 from src.database.chroma import ChromaManager
 from src.handlers.utils.validation import validate_parse_command_args
+from src.handlers.utils.filters import UnknownCommand
 
-# __import__("pysqlite3")
-# sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": os.path.join("..", "db.sqlite3"),
-#     }
-# }
 
 router = Router()
 
@@ -62,3 +54,8 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     prompt = QUERY_PROMPT.format(context=context_text, question=context)
     await msg.edit_text("Question: " + context + "\nAnswer: " + llm.predict(prompt))
+
+
+@router.message(UnknownCommand())
+async def unknown_command(message: types.Message):
+    await message.answer("Упс... Похоже я не знаю такой команды 😬")
