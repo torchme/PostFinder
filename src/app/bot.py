@@ -21,7 +21,7 @@ class PostFinderBot:
         bot_commands = [
             BotCommand(command="/help", description="Get info about me"),
             BotCommand(
-                command="/parse",
+                command="/find",
                 description="Parse channel posts. Params: channel (str), limit (int)",
             ),
         ]

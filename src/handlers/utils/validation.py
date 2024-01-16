@@ -9,7 +9,7 @@ def validate_parse_command_args(args_str: Optional[str]):
             "No arguments provided.\nPlease specify the channel after the command, e.g., /parse channel_name",
         )
     args = args_str.split()
-    channel = args[0]
+    channel = args[0].replace("@", "")
     context = " ".join(args[1:])
     limit = 100
 
