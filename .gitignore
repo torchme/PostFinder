@@ -165,3 +165,4 @@ src/artifacts/*
 *.mp4
 *.avi
 .ruff_cache
+*.session
