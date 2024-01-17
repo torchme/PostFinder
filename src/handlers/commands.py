@@ -7,8 +7,8 @@ from aiogram.filters import Command, CommandObject
 from langchain.prompts import PromptTemplate
 
 from loguru import logger
-from src.app.loader import llm
-from src.database.chroma import ChromaManager
+from src.app.loader import llm, pg_manager, bot
+from src.database.chroma_service import ChromaManager
 from src.handlers.utils.validation import validate_parse_command_args
 from src.handlers.utils.filters import UnknownCommand
 
@@ -26,6 +26,24 @@ async def send_welcome(message: types.Message):
         welcome_message = config["messages"]["welcome"]
 
     await message.answer(welcome_message, parse_mode="markdown")
+
+    telegram_id = message.from_user.id
+    username = message.from_user.username or ""
+    first_name = message.from_user.first_name or ""
+    last_name = message.from_user.last_name or ""
+
+    user_info = await bot.get_chat(telegram_id)
+    bio = user_info.bio or ""
+
+    if not await pg_manager.user_exists(telegram_id=telegram_id):
+        await pg_manager.add_user(
+            telegram_id=telegram_id,
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            bio=bio,
+        )
+        logger.info(f"User {telegram_id} registered!")
 
 
 @router.message(Command(commands="find"))
