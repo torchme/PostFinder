@@ -1,14 +1,11 @@
 import os
-
-# from langchain.chat_models import ChatOpenAI
-from langchain_community.chat_models import ChatOpenAI
-# from langchain.embeddings import OpenAIEmbeddings
-from langchain_community.embeddings import OpenAIEmbeddings
-
 from aiogram import Bot, Dispatcher
 from telethon import TelegramClient
+from langchain_community.chat_models import ChatOpenAI
+from langchain_community.embeddings import OpenAIEmbeddings
 
 from src.config import API_HASH, API_ID, TELEGRAM_BOT_TOKEN, PROXY_API_KEY
+from src.database.postgres_service import PostgresManager
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
@@ -28,3 +25,5 @@ llm = ChatOpenAI(
     openai_api_key=PROXY_API_KEY,
     openai_api_base="https://api.proxyapi.ru/openai/v1",
 )
+
+pg_manager = PostgresManager()

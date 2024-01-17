@@ -13,6 +13,7 @@ class User(Base):
     username = Column(String, nullable=True)
     first_name = Column(String, nullable=True)
     last_name = Column(String, nullable=True)
+    bio = Column(String, nullable=True)
     registered_at = Column(TIMESTAMP, default=datetime.utcnow)
 
 

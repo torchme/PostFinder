@@ -7,4 +7,7 @@ class UnknownCommand(Filter):
         self.commands = ["/start", "/help", "/find"]
 
     async def __call__(self, message: Message) -> bool:
-        return message.text.startswith("/") and message.text not in self.commands
+        try:
+            return message.text.startswith("/") and message.text not in self.commands
+        except Exception:
+            return False
