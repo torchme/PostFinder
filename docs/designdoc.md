@@ -105,6 +105,31 @@
 - Блок-схема для основного MVP помимо вышеуказанных этапов включает: анализ эффективности бота основываясь на пользовательской обратной связи, настройка параметров API для улучшения точности ответов.    
 
 #### 2.3. Этапы решения задачи `Data Scientist`  
+При обращении к боту выполняется регистрация/аутентификация пользователя. Информация о пользователях хранится в базе данных PostgreSQL, имеющей следующую структуру:
+<table>
+<tr valign="top" style="border: none; border-collapse: collapse;">
+<td style="border: none; border-collapse: collapse;">
+
+| user                                                                     |
+|--------------------------------------------------------------------------|
+| <span style="color:blue">**user_id**</span>                                                              |
+| telegram_id <br/>username<br/>first_name<br/>last_name<br/>registered_at |
+
+</td><td style="border: none; border-collapse: collapse;">
+
+| subscription_type                            |
+|----------------------------------------------|
+| <span style="color:green">**type_id**</span> |
+| type_name<br/>montly_price                   |
+
+</td><td style="border: none; border-collapse: collapse;">
+
+| user_subscription                                                                                                        |
+|--------------------------------------------------------------------------------------------------------------------------|
+| subscription_id                                                                                                          |
+| <span style="color:blue">**user_id**</span><br/><span style="color:green">**type_id**</span><br/>valid_from<br/>valid_to |
+
+</td></tr></table>
 
 - Этап 1 – Подготовка данных: Загрузка, предобработка и векторизация постов *целевого канала** для обучения модели, сохранение полученных эмбеддингов, например, в Chroma DB. На выходе — набор эмбеддингов постов *целевого канала**.  
 **Целевой канал: для автора – канал, к которому он подключает чат-бота, для пользователя – канал, который он выбирает для поиска информации.*
