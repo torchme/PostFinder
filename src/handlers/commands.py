@@ -1,3 +1,4 @@
+import asyncio
 import os
 import sys
 
@@ -11,7 +12,8 @@ from src.app.loader import llm, pg_manager, bot
 from src.database.chroma_service import ChromaManager
 from src.handlers.utils.validation import validate_parse_command_args
 from src.handlers.utils.filters import UnknownCommand
-
+from src.handlers.utils.markup import keyboard
+from src.handlers.utils.ui_helpers import update_loading_message
 
 router = Router()
 
@@ -55,7 +57,8 @@ async def find_answer(message: types.Message, command: CommandObject):
         await message.answer(error_message)
         return
 
-    msg = await message.answer("Searching...")
+    msg = await message.answer("👀 Ищем ответы...")
+    update_task = asyncio.create_task(update_loading_message(msg))
 
     chroma_manager = ChromaManager(channel=channel)
 
@@ -63,7 +66,12 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     retriever = chroma_manager.collection.as_retriever()
     docs = retriever.get_relevant_documents(context, search_kwargs={"k": 10})
-    context_text = "\n\n---\n\n".join([doc.page_content for doc in docs[::-1]])
+
+    context_text = "\n\n---\n\n".join([doc.page_content for doc in docs])
+    relevant_post_urls = [
+        f"[Пост {i+1}](t.me/{channel}/{doc.metadata['message_id']})"
+        for i, doc in enumerate(docs)
+    ][:3]
 
     QUERY_PROMPT = PromptTemplate(
         input_variables=["question", "context"],
@@ -71,7 +79,18 @@ async def find_answer(message: types.Message, command: CommandObject):
     )
 
     prompt = QUERY_PROMPT.format(context=context_text, question=context)
-    await msg.edit_text("Question: " + context + "\nAnswer: " + llm.predict(prompt))
+
+    update_task.cancel()
+    msg_text = "🙋🏼‍♂️ *Ваш вопрос:*\n" + context + "\n\n🔍 *Найденный ответ:*\n"
+    await msg.edit_text(msg_text)
+
+    async for msg_part_text in llm.astream(prompt):
+        msg_text += msg_part_text.content
+        if (len(msg_text.split()) % 7 == 0) and len(msg_text.split()) >= 7:
+            await msg.edit_text(msg_text)
+
+    msg_text += "\n\n• " + "\n• ".join(relevant_post_urls)
+    await msg.edit_text(msg_text, reply_markup=keyboard, disable_web_page_preview=True)
 
 
 @router.message(UnknownCommand())
