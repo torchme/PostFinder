@@ -1,10 +1,11 @@
-FROM python:3.10.1
+FROM python:3.11
 
 WORKDIR /app
 
 COPY . /app
 
 RUN pip install poetry
+
 RUN poetry install
 
-CMD ["poetry", "run", "bash", "run_bot.sh"]
+RUN chmod +x /app/docker/bot.sh
