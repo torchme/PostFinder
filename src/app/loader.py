@@ -19,12 +19,10 @@ emb_fn = OpenAIEmbeddings(
 )
 
 llm = ChatOpenAI(
-    model_name="gpt-3.5-turbo",
-    temperature=0,
-    # openai_api_key=PROXY_API_KEY,
+    model_name="gpt-3.5-turbo-1106",
+    temperature=0.7,
     api_key=PROXY_API_KEY,
     base_url="https://api.proxyapi.ru/openai/v1",
-    # openai_api_base="https://api.proxyapi.ru/openai/v1",
 )
 
 pg_manager = PostgresManager()
