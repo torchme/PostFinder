@@ -3,7 +3,13 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-dotenv_path = Path(".env")
+env_state = os.getenv("ENV_STATE", "development")
+
+if env_state == "docker":
+    dotenv_path = Path(".env-docker")
+else:
+    dotenv_path = Path(".env")
+
 load_dotenv(dotenv_path=dotenv_path)
 
 API_ID = os.getenv("API_ID")

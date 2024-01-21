@@ -4,20 +4,31 @@ services:
   postgres_db:
     container_name: postgres_db
     image: postgres:14
-    command: -p 5432
-    expose:
-      - 5432
+    ports:
+      - "5432:5432"
     env_file:
-      - ../.env
+      - ../.env-docker
 
-
-  bot:
-    container_name: bot
+  migrations:
+    container_name: alembic_migrations
     build:
       context: ../
       dockerfile: docker/Dockerfile
     depends_on:
       - postgres_db
+    environment:
+      - ENV_STATE=docker
     env_file:
-      - ../.env
+      - ../.env-docker
+    command: poetry run alembic upgrade head
+
+  bot:
+    container_name: bot
+    image: docker-migrations:latest
+    depends_on:
+      - migrations
+    environment:
+      - ENV_STATE=docker
+    env_file:
+      - ../.env-docker
     command: ["/app/docker/bot.sh"]

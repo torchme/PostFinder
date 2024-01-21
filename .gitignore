@@ -166,3 +166,5 @@ src/artifacts/*
 *.avi
 .ruff_cache
 *.session
+.env-docker
+.DS_Store
