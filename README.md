@@ -28,6 +28,22 @@ pre-commit install
 ## 2. Run
 
 ### Add .env file with secret keys
+* API_ID
+* API_HASH
+* TELEGRAM_BOT_TOKEN
+* PROXY_API_KEY
+
+**For database connection:** (with examples)
+* DB_USER=postgres
+* DB_PASS=postgres
+* DB_HOST=postgres_db
+* DB_PORT=5432
+* DB_NAME=postfinder
+
+**For docker compose:**
+* POSTGRES_DB=postfinder
+* POSTGRES_USER=postgres
+* POSTGRES_PASSWORD=postgres
 
 ### Start bot
 
@@ -40,3 +56,10 @@ or
 ```
 python -m src.app.bot
 ```
+
+## 3. Run With Docker
+```
+docker-compose -f docker/docker-compose.yaml build
+docker-compose -f docker/docker-compose.yaml up
+```
+
