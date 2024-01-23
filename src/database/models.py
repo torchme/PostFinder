@@ -46,4 +46,5 @@ class Action(Base):
     response = Column(String, nullable=True)
     input_tokens = Column(Integer, nullable=True)
     output_tokens = Column(Integer, nullable=True)
+    execution_time = Column(Integer, nullable=True)
     feedback = Column(String, nullable=True)

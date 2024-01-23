@@ -1,4 +1,5 @@
 import os
+import tiktoken
 from aiogram import Bot, Dispatcher
 from telethon import TelegramClient
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
@@ -24,5 +25,7 @@ llm = ChatOpenAI(
     api_key=PROXY_API_KEY,
     base_url="https://api.proxyapi.ru/openai/v1",
 )
+
+encoding = tiktoken.get_encoding("cl100k_base")
 
 pg_manager = PostgresManager()
