@@ -5,7 +5,7 @@ from langchain_core.documents import Document
 import pandas as pd
 
 from src.app.loader import emb_fn
-from src.handlers.utils.scrapper import scrape_telegram_messages
+from src.utils.scrapper import scrape_telegram_messages
 from src.app.loader import client
 
 
