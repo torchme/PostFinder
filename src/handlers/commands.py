@@ -11,10 +11,10 @@ from langchain.prompts import PromptTemplate
 from loguru import logger
 from src.app.loader import llm, pg_manager, bot, encoding
 from src.database.chroma_service import ChromaManager
-from src.handlers.utils.validation import validate_parse_command_args
-from src.handlers.utils.filters import UnknownCommand
-from src.handlers.utils.markup import keyboard
-from src.handlers.utils.ui_helpers import update_loading_message
+from src.utils.validation import validate_parse_command_args
+from src.utils.filters import UnknownCommand
+from src.utils.markup import keyboard
+from src.utils.ui_helpers import update_loading_message
 
 router = Router()
 
