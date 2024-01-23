@@ -1,6 +1,6 @@
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, update
 from src.database import async_session_maker
-from src.database.models import User
+from src.database.models import User, Action
 
 
 class PostgresManager:
@@ -27,3 +27,40 @@ class PostgresManager:
             exists = result.mappings().fetchall()
 
             return bool(exists)
+
+    async def add_action(
+        self,
+        telegram_id: int,
+        platform_type: str,
+        resource_name: str,
+        query: str,
+        response: str,
+        input_tokens: int,
+        output_tokens: int,
+        execution_time: int,
+    ):
+        async with async_session_maker() as session:
+            stm = insert(Action).values(
+                telegram_id=telegram_id,
+                platform_type=platform_type,
+                resource_name=resource_name,
+                query=query,
+                response=response,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                execution_time=execution_time,
+            )
+
+            await session.execute(stm)
+            await session.commit()
+
+    async def add_feedback(self, action_id: int, feedback: str):
+        async with async_session_maker() as session:
+            stm = (
+                update(Action)
+                .where(Action.action_id == action_id)
+                .values(feedback=feedback)
+            )
+
+            await session.execute(stm)
+            await session.commit()
