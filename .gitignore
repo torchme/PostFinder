@@ -170,4 +170,4 @@ cython_debug/
 *.csv
 .env-docker
 .DS_Store
-src/artifacts/migrations/versions/
+src/artifacts/migrations/versions/*.py
