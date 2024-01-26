@@ -159,12 +159,14 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
-# Voice/Video Artifacts
-src/artifacts/*
+# Artifacts
 *.mp3
 *.mp4
 *.avi
 .ruff_cache
 *.session
+*.sql
+*.dump
+*.csv
 .env-docker
 .DS_Store

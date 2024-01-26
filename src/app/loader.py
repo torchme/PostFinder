@@ -10,7 +10,7 @@ from src.database.postgres_service import PostgresManager
 bot = Bot(token=TELEGRAM_BOT_TOKEN, parse_mode="markdown")
 dp = Dispatcher()
 client = TelegramClient(
-    "sessions/post_finder.session", api_id=API_ID, api_hash=API_HASH
+    "src/artifacts/sessions/post_finder.session", api_id=API_ID, api_hash=API_HASH
 )
 
 emb_fn = OpenAIEmbeddings(
