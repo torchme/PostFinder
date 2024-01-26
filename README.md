@@ -26,41 +26,8 @@ pre-commit install
 ```
 
 ## 2. Run
-### Add .env file with secret keys
-* API_ID
-* API_HASH
-* TELEGRAM_BOT_TOKEN
-* PROXY_API_KEY
-
-**For database connection:** (with examples)
-* DB_USER=postgres
-* DB_PASS=postgres
-* DB_HOST=localhost
-* DB_PORT=5432
-* DB_NAME=postfinder
-
-**For docker compose:**
-* POSTGRES_DB=postfinder
-* POSTGRES_USER=postgres
-* POSTGRES_PASSWORD=postgres
-
-### Add .env-docker file with secret keys (DB_HOST is different from .env file)
-* API_ID
-* API_HASH
-* TELEGRAM_BOT_TOKEN
-* PROXY_API_KEY
-
-**For database connection:** (with examples)
-* DB_USER=postgres
-* DB_PASS=postgres
-* DB_HOST=postgres_db
-* DB_PORT=5432
-* DB_NAME=postfinder
-
-**For docker compose:**
-* POSTGRES_DB=postfinder
-* POSTGRES_USER=postgres
-* POSTGRES_PASSWORD=postgres
+### Add .env and .env-docker file with secret keys
+* Contact @redpf for keys
 
 ### Start bot
 
