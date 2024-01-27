@@ -40,6 +40,7 @@ class Action(Base):
 
     action_id = Column(Integer, primary_key=True)
     telegram_id = Column(Integer, ForeignKey("user.telegram_id"))
+    response_id = Column(Integer, nullable=True)
     platform_type = Column(String, nullable=True)
     resource_name = Column(String, nullable=True)
     query = Column(String, nullable=True)

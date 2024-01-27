@@ -13,7 +13,7 @@ from src.app.loader import llm, pg_manager, bot, encoding
 from src.database.chroma_service import ChromaManager
 from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommand
-from src.utils.markup import keyboard
+from src.utils.markup import inline_markup
 from src.utils.ui_helpers import update_loading_message
 
 router = Router()
@@ -98,13 +98,18 @@ async def find_answer(message: types.Message, command: CommandObject):
     output_tokens = len(encoding.encode(response))
 
     msg_text += "\n\n• " + "\n• ".join(relevant_post_urls)
-    await msg.edit_text(msg_text, reply_markup=keyboard, disable_web_page_preview=True)
+    await msg.edit_text(
+        msg_text,
+        reply_markup=inline_markup(message_id=msg.message_id),
+        disable_web_page_preview=True,
+    )
 
     end_time = time.time()
     execution_time = int(end_time - start_time)
 
     await pg_manager.add_action(
         telegram_id=message.from_user.id,
+        response_id=msg.message_id,
         platform_type="telegram",
         resource_name=channel,
         query=query,

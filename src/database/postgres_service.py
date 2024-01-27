@@ -31,6 +31,7 @@ class PostgresManager:
     async def add_action(
         self,
         telegram_id: int,
+        response_id: int,
         platform_type: str,
         resource_name: str,
         query: str,
@@ -42,6 +43,7 @@ class PostgresManager:
         async with async_session_maker() as session:
             stm = insert(Action).values(
                 telegram_id=telegram_id,
+                response_id=response_id,
                 platform_type=platform_type,
                 resource_name=resource_name,
                 query=query,
@@ -54,11 +56,11 @@ class PostgresManager:
             await session.execute(stm)
             await session.commit()
 
-    async def add_feedback(self, action_id: int, feedback: str):
+    async def add_feedback(self, response_id: int, feedback: str):
         async with async_session_maker() as session:
             stm = (
                 update(Action)
-                .where(Action.action_id == action_id)
+                .where(Action.response_id == response_id)
                 .values(feedback=feedback)
             )
 
