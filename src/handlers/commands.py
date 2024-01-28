@@ -12,7 +12,7 @@ from loguru import logger
 from src.app.loader import llm, pg_manager, bot, encoding
 from src.database.chroma_service import ChromaManager
 from src.utils.validation import validate_parse_command_args
-from src.utils.filters import UnknownCommand
+from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup
 from src.utils.ui_helpers import update_loading_message
 
@@ -98,6 +98,8 @@ async def find_answer(message: types.Message, command: CommandObject):
     output_tokens = len(encoding.encode(response))
 
     msg_text += "\n\n• " + "\n• ".join(relevant_post_urls)
+    msg_text += "\n\n🔹 Чтобы продолжить, ответьте на это сообщение"
+
     await msg.edit_text(
         msg_text,
         reply_markup=inline_markup(message_id=msg.message_id),
@@ -112,6 +114,7 @@ async def find_answer(message: types.Message, command: CommandObject):
         response_id=msg.message_id,
         platform_type="telegram",
         resource_name=channel,
+        prompt=prompt,
         query=query,
         response=response,
         input_tokens=input_tokens,
@@ -122,6 +125,6 @@ async def find_answer(message: types.Message, command: CommandObject):
     logger.info(f"Action for user {message.from_user.id} processed!")
 
 
-@router.message(UnknownCommand())
+@router.message(UnknownCommandFilter())
 async def unknown_command(message: types.Message):
     await message.answer("Упс... Похоже я не знаю такой команды 😬")
