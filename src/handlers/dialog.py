@@ -2,10 +2,12 @@ import time
 from aiogram import Router, types
 from langchain.schema import HumanMessage, AIMessage
 from loguru import logger
+import yaml
 
 from src.app.loader import pg_manager, llm, encoding
 from src.utils.filters import MessageReplyFilter
 from src.utils.markup import inline_markup
+from src.config import config_path
 
 router = Router()
 
@@ -71,3 +73,12 @@ async def dialog(message: types.Message):
     )
 
     logger.info(f"Action for user {message.from_user.id} processed!")
+
+
+@router.message()
+async def unknown_message(message: types.Message):
+    with open(config_path, "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+        unknown_message_error = config["messages"]["unknown_message_error"]
+
+    await message.answer(unknown_message_error)

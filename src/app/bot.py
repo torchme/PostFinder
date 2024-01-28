@@ -26,7 +26,7 @@ class PostFinderBot:
             BotCommand(command="/help", description="Get info about me"),
             BotCommand(
                 command="/find",
-                description="Parse channel posts. Params: channel (str), limit (int)",
+                description="Find response. Params: channel (str), query (str)",
             ),
         ]
         await bot.set_my_commands(bot_commands)
