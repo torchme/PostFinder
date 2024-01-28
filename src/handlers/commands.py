@@ -1,6 +1,4 @@
 import asyncio
-import os
-import sys
 import time
 
 import yaml
@@ -11,15 +9,13 @@ from langchain.prompts import PromptTemplate
 from loguru import logger
 from src.app.loader import llm, pg_manager, bot, encoding
 from src.database.chroma_service import ChromaManager
+from src.config import config_path
 from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup
 from src.utils.ui_helpers import update_loading_message
 
 router = Router()
-
-config_path = os.path.join(sys.path[0], "src/config/config.yaml")
-logger.info(config_path)
 
 
 @router.message(Command(commands=["start", "help"]))
@@ -28,7 +24,7 @@ async def send_welcome(message: types.Message):
         config = yaml.safe_load(f)
         welcome_message = config["messages"]["welcome"]
 
-    await message.answer(welcome_message, parse_mode="markdown")
+    await message.answer(welcome_message)
 
     telegram_id = message.from_user.id
     username = message.from_user.username or ""
@@ -47,6 +43,8 @@ async def send_welcome(message: types.Message):
             bio=bio,
         )
         logger.info(f"User {telegram_id} registered!")
+    else:
+        logger.info(f"User {telegram_id} is already registered!")
 
 
 @router.message(Command(commands="find"))
