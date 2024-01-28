@@ -6,6 +6,7 @@ from loguru import logger
 from src.app.loader import bot, dp
 from src.handlers.commands import router as router_commands
 from src.handlers.callbacks import router as router_callbacks
+from src.handlers.dialog import router as router_dialog
 
 
 class PostFinderBot:
@@ -15,6 +16,7 @@ class PostFinderBot:
 
         dp.include_router(router_commands)
         dp.include_router(router_callbacks)
+        dp.include_router(router_dialog)
 
     async def start(self):
         await dp.start_polling(bot)

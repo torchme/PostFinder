@@ -35,6 +35,7 @@ class PostgresManager:
         platform_type: str,
         resource_name: str,
         query: str,
+        prompt: str,
         response: str,
         input_tokens: int,
         output_tokens: int,
@@ -47,6 +48,7 @@ class PostgresManager:
                 platform_type=platform_type,
                 resource_name=resource_name,
                 query=query,
+                prompt=prompt,
                 response=response,
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
@@ -66,3 +68,14 @@ class PostgresManager:
 
             await session.execute(stm)
             await session.commit()
+
+    async def get_previous_context(self, reply_to_message_id: int):
+        async with async_session_maker() as session:
+            query = select(Action.prompt, Action.response, Action.resource_name).where(
+                Action.response_id == reply_to_message_id
+            )
+
+            result = await session.execute(query)
+            previus_context = result.mappings().fetchone()
+
+            return previus_context

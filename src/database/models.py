@@ -44,6 +44,7 @@ class Action(Base):
     platform_type = Column(String, nullable=True)
     resource_name = Column(String, nullable=True)
     query = Column(String, nullable=True)
+    prompt = Column(String, nullable=True)
     response = Column(String, nullable=True)
     input_tokens = Column(Integer, nullable=True)
     output_tokens = Column(Integer, nullable=True)
