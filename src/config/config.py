@@ -26,5 +26,6 @@ DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_PASS = os.getenv("DB_PASS")
 
+PAYMENT_TOKEN = os.getenv("PAYMENT_TOKEN")
 
 config_path = "src/config/config.yaml"

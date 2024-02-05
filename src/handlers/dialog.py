@@ -6,7 +6,7 @@ import yaml
 
 from src.app.loader import pg_manager, llm, encoding
 from src.utils.filters import MessageReplyFilter
-from src.utils.markup import inline_markup
+from src.utils.markup import inline_markup_feedback
 from src.config import config_path
 
 router = Router()
@@ -53,7 +53,7 @@ async def dialog(message: types.Message):
     msg_text += "\n\n🔹 Чтобы продолжить, ответьте на это сообщение"
     await msg.edit_text(
         msg_text,
-        reply_markup=inline_markup(message_id=msg.message_id),
+        reply_markup=inline_markup_feedback(message_id=msg.message_id),
         disable_web_page_preview=True,
     )
 

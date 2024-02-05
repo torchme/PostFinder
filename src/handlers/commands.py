@@ -12,7 +12,7 @@ from src.database.chroma_service import ChromaManager
 from src.config import config_path
 from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
-from src.utils.markup import inline_markup
+from src.utils.markup import inline_markup_feedback, inline_markup_payment
 from src.utils.ui_helpers import update_loading_message
 
 router = Router()
@@ -116,7 +116,7 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     await msg.edit_text(
         msg_text,
-        reply_markup=inline_markup(message_id=msg.message_id),
+        reply_markup=inline_markup_feedback(message_id=msg.message_id),
         disable_web_page_preview=True,
     )
 
@@ -137,6 +137,13 @@ async def find_answer(message: types.Message, command: CommandObject):
     )
 
     logger.info(f"Action for user {message.from_user.id} processed!")
+
+
+@router.message(Command(commands="account"))
+async def account(message: types.Message):
+    await message.answer(
+        "Выберите подписку", reply_markup=inline_markup_payment(chat_id=message.chat.id)
+    )
 
 
 @router.message(UnknownCommandFilter())
