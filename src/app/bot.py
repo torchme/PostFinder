@@ -33,11 +33,12 @@ class PostFinderBot:
         An asynchronous function to handle the startup event. It sets the bot commands and logs a warning message.
         """
         bot_commands = [
-            BotCommand(command="/help", description="Get info about me"),
+            BotCommand(command="/help", description="ℹ️ About me"),
             BotCommand(
                 command="/find",
-                description="Find response. Params: channel (str), query (str)",
+                description="🔍 Find response. Params: channel (str), query (str)",
             ),
+            BotCommand(command="/account", description="🛒 Plan"),
         ]
         await bot.set_my_commands(bot_commands)
 

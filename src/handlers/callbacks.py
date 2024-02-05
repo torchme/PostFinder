@@ -2,7 +2,12 @@ from aiogram import F, Router, types
 
 from src.app.loader import pg_manager, bot
 from src.config import PAYMENT_TOKEN
-from src.utils.schemas import FeedbackCallback, PaymentCallback
+from src.utils.schemas import (
+    FeedbackCallback,
+    PaymentCallback,
+    PaymentProcessingCallback,
+)
+from src.utils.markup import inline_markup_processing_payment, inline_markup_payment
 
 router = Router()
 
@@ -42,4 +47,25 @@ async def payment(callback_query: types.CallbackQuery, callback_data: PaymentCal
                 amount=int(callback_data.price) * 100,
             )
         ],
+    )
+
+    await bot.edit_message_text(
+        text="💳 *Оплата...*",
+        chat_id=int(callback_data.chat_id),
+        message_id=callback_query.message.message_id,
+        reply_markup=inline_markup_processing_payment(
+            chat_id=int(callback_data.chat_id)
+        ),
+    )
+
+
+@router.callback_query(PaymentProcessingCallback.filter(F.type == "payment_processing"))
+async def payment_processing(
+    callback_query: types.CallbackQuery, callback_data: PaymentProcessingCallback
+):
+    await bot.edit_message_text(
+        text="🔑 *Выберите тариф*",
+        chat_id=int(callback_data.chat_id),
+        message_id=callback_query.message.message_id,
+        reply_markup=inline_markup_payment(chat_id=int(callback_data.chat_id)),
     )

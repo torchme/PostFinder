@@ -142,7 +142,8 @@ async def find_answer(message: types.Message, command: CommandObject):
 @router.message(Command(commands="account"))
 async def account(message: types.Message):
     await message.answer(
-        "Выберите подписку", reply_markup=inline_markup_payment(chat_id=message.chat.id)
+        "🔑 *Выберите тариф*",
+        reply_markup=inline_markup_payment(chat_id=message.chat.id),
     )
 
 

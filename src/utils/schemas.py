@@ -12,3 +12,13 @@ class PaymentCallback(CallbackData, prefix="payment"):
     chat_id: str
     price: str
     requests: str
+
+
+class PaymentQuestionCallback(CallbackData, prefix="payment_question"):
+    type: str
+    chat_id: str
+
+
+class PaymentProcessingCallback(CallbackData, prefix="payment_processing"):
+    type: str
+    chat_id: str
