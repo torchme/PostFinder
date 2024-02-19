@@ -3,7 +3,7 @@
 ---
 ## 1. Install
 
-### python3.8
+### python
 
 ```
 pip install poetry
