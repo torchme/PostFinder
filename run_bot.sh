@@ -1,1 +1,1 @@
-python -m src.app.bot
+poetry run python -m src.app.bot
