@@ -11,6 +11,10 @@ from src.handlers.dialog import router as router_dialog
 
 class PostFinderBot:
     def __init__(self):
+        """
+        Initializes the object and registers the startup and shutdown events.
+        Also includes the specified routers for commands, callbacks, and dialog.
+        """
         dp.startup.register(self.startup_event)
         dp.shutdown.register(self.shutdown_event)
 
@@ -19,9 +23,15 @@ class PostFinderBot:
         dp.include_router(router_dialog)
 
     async def start(self):
+        """
+        Starts the bot by polling the dispatcher.
+        """
         await dp.start_polling(bot)
 
     async def startup_event(self):
+        """
+        An asynchronous function to handle the startup event. It sets the bot commands and logs a warning message.
+        """
         bot_commands = [
             BotCommand(command="/help", description="Get info about me"),
             BotCommand(
@@ -35,6 +45,9 @@ class PostFinderBot:
         logger.warning("Bot started")
 
     async def shutdown_event(self):
+        """
+        Asynchronous function to handle the shutdown event of the bot.
+        """
         logger.warning("Bot stopped")
 
 

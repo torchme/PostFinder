@@ -20,6 +20,10 @@ router = Router()
 
 @router.message(Command(commands=["start", "help"]))
 async def send_welcome(message: types.Message):
+    """
+    Sends a welcome message to the user and registers the user in the system if not already registered.
+    Takes a message object as input.
+    """
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
         welcome_message = config["messages"]["welcome"]
@@ -49,8 +53,19 @@ async def send_welcome(message: types.Message):
 
 @router.message(Command(commands="find"))
 async def find_answer(message: types.Message, command: CommandObject):
+    """
+    Asynchronous function for finding an answer based on the given message and command object.
+
+    Parameters
+    ----------
+        message: aiogram.types.Message
+            The message object.
+        command: aiogram.filters.CommandObject
+            The command object containing arguments.
+    """
+
     args = command.args
-    channel, query, limit, error_message = validate_parse_command_args(args)
+    channel, query, _, error_message = validate_parse_command_args(args)
 
     if error_message:
         await message.answer(error_message)

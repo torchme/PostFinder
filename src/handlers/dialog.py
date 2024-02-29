@@ -14,6 +14,10 @@ router = Router()
 
 @router.message(MessageReplyFilter())
 async def dialog(message: types.Message):
+    """
+    Asynchronous function that handles a dialog message and performs various operations on the message content and context.
+    Takes a types.Message object as a parameter. Does not return anything.
+    """
     start_time = time.time()
 
     previous_context = await pg_manager.get_previous_context(
@@ -77,6 +81,18 @@ async def dialog(message: types.Message):
 
 @router.message()
 async def unknown_message(message: types.Message):
+    """
+    Asynchronous function that handles unknown messages and sends an error response.
+
+    Parameters
+    ----------
+    message : types.Message
+        The message object representing the unknown message.
+
+    Returns
+    -------
+    None
+    """
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
         unknown_message_error = config["messages"]["unknown_message_error"]

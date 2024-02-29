@@ -7,8 +7,11 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from src.config import API_HASH, API_ID, TELEGRAM_BOT_TOKEN, PROXY_API_KEY
 from src.database.postgres_service import PostgresManager
 
+
 bot = Bot(token=TELEGRAM_BOT_TOKEN, parse_mode="markdown")
+
 dp = Dispatcher()
+
 client = TelegramClient(
     "src/artifacts/sessions/post_finder.session", api_id=API_ID, api_hash=API_HASH
 )

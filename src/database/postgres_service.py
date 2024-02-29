@@ -7,6 +7,22 @@ class PostgresManager:
     async def add_user(
         self, telegram_id: int, username: str, first_name: str, last_name: str, bio: str
     ) -> None:
+        """
+        Add a new user to the database with the provided Telegram ID, username, first name, last name, and bio.
+
+        Parameters
+        ----------
+        telegram_id : int
+            The Telegram ID of the user.
+        username : str
+            The username of the user.
+        first_name : str
+            The first name of the user.
+        last_name : str
+            The last name of the user.
+        bio : str
+            The bio of the user
+        """
         async with async_session_maker() as session:
             stm = insert(User).values(
                 telegram_id=telegram_id,
@@ -20,6 +36,21 @@ class PostgresManager:
             await session.commit()
 
     async def user_exists(self, telegram_id: int) -> bool:
+        """
+        Check if a user with the given telegram_id exists in the database.
+
+        Parameters
+        ----------
+        self : instance
+            The instance of the class.
+        telegram_id : int
+            The telegram_id of the user to check.
+
+        Returns
+        -------
+        bool
+            True if the user exists, False otherwise.
+        """
         async with async_session_maker() as session:
             query = select(User).where(User.telegram_id == telegram_id)
 
@@ -41,6 +72,32 @@ class PostgresManager:
         output_tokens: int,
         execution_time: int,
     ):
+        """
+        Add a new action to the database with the provided Telegram ID, response ID, platform type, resource name, query, prompt, response, input tokens, output tokens, and execution time.
+
+        Parameters
+        ----------
+        telegram_id : int
+            The Telegram ID of the user.
+        response_id : int
+            The response ID of the action.
+        platform_type : str
+            The platform type of the action.
+        resource_name : str
+            The name of the resource.
+        query : str
+            The query of the action.
+        prompt : str
+            The prompt of the action.
+        response : str
+            The response of the action.
+        input_tokens : int
+            The number of input tokens of the action.
+        output_tokens : int
+            The number of output tokens of the action.
+        execution_time : int
+            The execution time of the action.
+        """
         async with async_session_maker() as session:
             stm = insert(Action).values(
                 telegram_id=telegram_id,
@@ -59,6 +116,16 @@ class PostgresManager:
             await session.commit()
 
     async def add_feedback(self, response_id: int, feedback: str):
+        """
+        Add a new feedback to the database with the provided response ID and feedback.
+
+        Parameters
+        ----------
+        response_id : int
+            The response ID of the action.
+        feedback : str
+            The feedback of the user.
+        """
         async with async_session_maker() as session:
             stm = (
                 update(Action)
@@ -70,6 +137,18 @@ class PostgresManager:
             await session.commit()
 
     async def get_previous_context(self, reply_to_message_id: int):
+        """
+        Get the previous context from the database with the provided reply_to_message_id.
+
+        Parameters
+        ----------
+        reply_to_message_id : int
+            The reply_to_message_id of the action.
+
+        Returns
+        -------
+        previus_context
+        """
         async with async_session_maker() as session:
             query = select(Action.prompt, Action.response, Action.resource_name).where(
                 Action.response_id == reply_to_message_id
