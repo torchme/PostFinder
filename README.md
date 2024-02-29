@@ -11,7 +11,7 @@
 
 ## What is it?
 
-**Post Finder** is telegram bot integration semantich search content. 
+**Post Finder** is telegram bot integration based on semantich search content. 
 
 ---
 ## 1. Installation from sources
