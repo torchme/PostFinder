@@ -7,7 +7,7 @@ from aiogram.filters import Command, CommandObject
 from langchain.prompts import PromptTemplate
 
 from loguru import logger
-from src.app.loader import llm, pg_manager, bot, encoding
+from src.app.loader import llm, pg_manager, bot, encoding, extractor
 from src.database.chroma_service import ChromaManager
 from src.config import config_path
 from src.utils.validation import validate_parse_command_args
