@@ -14,6 +14,7 @@ from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup
 from src.utils.ui_helpers import update_loading_message
+from src.utils.extractor import Extractor
 
 router = Router()
 
@@ -66,7 +67,7 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     args = command.args
     channel, query, _, error_message = validate_parse_command_args(args)
-    
+    extractor = Extractor(llm=llm)
     
     if error_message:
         await message.answer(error_message)
