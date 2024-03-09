@@ -82,7 +82,7 @@ async def find_answer(message: types.Message, command: CommandObject):
     await chroma_manager.update_collection()
 
     retriever = chroma_manager.collection.as_retriever()
-    docs = retriever.get_relevant_documents(extractor.add_features(query=query), search_kwargs={"k": 5})
+    docs = retriever.get_relevant_documents(query, search_kwargs={"k": 5})
 
     context_text = "\n\n---\n\n".join([doc.page_content for doc in docs])
     relevant_post_urls = [
@@ -95,7 +95,7 @@ async def find_answer(message: types.Message, command: CommandObject):
         template="""Answer the question based on the context below. Use language as in question. "\n\nContext: {context}\n\n---\n\nQuestion: {question}\nAnswer:""",
     )
 
-    prompt = QUERY_PROMPT.format(context=context_text, question=query)
+    prompt = QUERY_PROMPT.format(context=context_text, question=extractor.add_features(query=query))
 
     update_task.cancel()
     msg_text = "🙋🏼‍♂️ *Ваш вопрос:*\n" + query + "\n\n🔍 *Найденный ответ:*\n"
