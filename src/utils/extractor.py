@@ -1,6 +1,7 @@
 from langchain.prompts import PromptTemplate
-import yaml
 from src.config import config_path
+import yaml
+
 class Extractor:
     def __init__(self, llm):
         self.llm = llm
