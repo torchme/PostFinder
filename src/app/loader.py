@@ -3,7 +3,7 @@ import tiktoken
 from aiogram import Bot, Dispatcher
 from telethon import TelegramClient
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from src.utils.extractor import Extractor   
+from src.utils.extractor import Extractor
 from src.config import API_HASH, API_ID, TELEGRAM_BOT_TOKEN, PROXY_API_KEY
 from src.database.postgres_service import PostgresManager
 
