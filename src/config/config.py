@@ -29,6 +29,8 @@ DB_PASS = os.getenv("DB_PASS")
 
 config_path = "src/config/config.yaml"
 
+ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
+
 with open("src/artifacts/admins.txt") as file:
     ADMIN_IDS = list(map(int, file.readlines()))
 

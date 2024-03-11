@@ -9,11 +9,12 @@ from langchain.prompts import PromptTemplate
 from loguru import logger
 from src.app.loader import llm, pg_manager, bot, encoding, extractor
 from src.database.chroma_service import ChromaManager
-from src.config import config_path
+from src.config import config_path, WHITELIST
 from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup_feedback
 from src.utils.ui_helpers import update_loading_message
+from src.utils.admin_service import send_to_admins
 
 router = Router()
 
@@ -50,6 +51,13 @@ async def send_welcome(message: types.Message):
     else:
         logger.info(f"User {telegram_id} is already registered!")
 
+    await send_to_admins(
+        user_id=telegram_id,
+        username="@" + username,
+        first_name=first_name,
+        last_name=last_name,
+    )
+
 
 @router.message(Command(commands="find"))
 async def find_answer(message: types.Message, command: CommandObject):
@@ -63,6 +71,11 @@ async def find_answer(message: types.Message, command: CommandObject):
         command: aiogram.filters.CommandObject
             The command object containing arguments.
     """
+    if message.from_user.id not in WHITELIST:
+        await message.answer(
+            "Вы еще не прошли модерацию, пожалуйста, ожидайте"
+        )
+        return
 
     args = command.args
     channel, query, _, error_message = validate_parse_command_args(args)

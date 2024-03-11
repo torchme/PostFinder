@@ -19,7 +19,7 @@ async def add_user(message: types.Message, command: CommandObject):
         WHITELIST.append(user_id)
 
         with open("src/artifacts/whitelist.txt", "a") as file:
-            file.write("\n" + str(user_id))
+            file.write(str(user_id) + "\n")
 
         await message.answer(f"User {user_id} was successfully added!")
     else:
