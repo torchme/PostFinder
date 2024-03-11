@@ -51,12 +51,13 @@ async def send_welcome(message: types.Message):
     else:
         logger.info(f"User {telegram_id} is already registered!")
 
-    await send_to_admins(
-        user_id=telegram_id,
-        username="@" + username,
-        first_name=first_name,
-        last_name=last_name,
-    )
+    if telegram_id not in WHITELIST:
+        await send_to_admins(
+            user_id=telegram_id,
+            username="@" + username,
+            first_name=first_name,
+            last_name=last_name,
+        )
 
 
 @router.message(Command(commands="find"))
