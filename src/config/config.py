@@ -30,3 +30,9 @@ DB_PASS = os.getenv("DB_PASS")
 PAYMENT_TOKEN = os.getenv("PAYMENT_TOKEN")
 
 config_path = "src/config/config.yaml"
+
+with open("src/artifacts/admins.txt") as file:
+    ADMIN_IDS = list(map(int, file.readlines()))
+
+with open("src/artifacts/whitelist.txt") as file:
+    WHITELIST = list(map(int, file.readlines()))

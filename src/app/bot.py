@@ -7,6 +7,7 @@ from src.app.loader import bot, dp
 from src.handlers.commands import router as router_commands
 from src.handlers.callbacks import router as router_callbacks
 from src.handlers.dialog import router as router_dialog
+from src.handlers.admin import router as router_admin
 
 
 class PostFinderBot:
@@ -18,6 +19,7 @@ class PostFinderBot:
         dp.startup.register(self.startup_event)
         dp.shutdown.register(self.shutdown_event)
 
+        dp.include_router(router_admin)
         dp.include_router(router_commands)
         dp.include_router(router_callbacks)
         dp.include_router(router_dialog)
