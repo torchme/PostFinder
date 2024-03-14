@@ -14,7 +14,7 @@ from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup
 from src.utils.ui_helpers import update_loading_message
-
+from src.utils.yt_scrapper import parse_video
 router = Router()
 
 
@@ -65,16 +65,17 @@ async def find_answer(message: types.Message, command: CommandObject):
     """
 
     args = command.args
-    channel, query, _, error_message = validate_parse_command_args(args)
-    
-    
+    channel, video_url, query, _, error_message = validate_parse_command_args(args)
+
     if error_message:
         await message.answer(error_message)
         return
-
+    elif video_url:
+        chunks = parse_video(video_id=video_url)
+        # docs = get_youtube_docs(chunks)    ## will be added
     start_time = time.time()
-
     msg = await message.answer("👀 Ищем ответы...")
+    
     update_task = asyncio.create_task(update_loading_message(msg))
 
     chroma_manager = ChromaManager(channel=channel)

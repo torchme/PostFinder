@@ -6,7 +6,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from src.utils.extractor import Extractor   
 from src.config import API_HASH, API_ID, TELEGRAM_BOT_TOKEN, PROXY_API_KEY
 from src.database.postgres_service import PostgresManager
-
+from src.utils.semantic_splitter import SemanticSplitter
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN, parse_mode="markdown")
 
@@ -28,6 +28,8 @@ llm = ChatOpenAI(
     api_key=PROXY_API_KEY,
     base_url="https://api.proxyapi.ru/openai/v1",
 )
+
+semantic_splitter = SemanticSplitter(model=emb_fn)
 
 extractor = Extractor(llm=llm)
 
