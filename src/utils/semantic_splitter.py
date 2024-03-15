@@ -54,10 +54,11 @@ class SemanticSplitter:
         """
         sentences = self._split_text(text)
         combined_sentences = self._combine_sentences(sentences)
-        embeddings = self.model.encode(combined_sentences)
+        embeddings = self.model.embed_documents(combined_sentences)
         distances = self._calculate_distances(embeddings)
         indices = self._find_breakpoints(distances)
         chunks = self._group_sentences(sentences, indices)
+        print(len(distances), len(indices))
         return chunks
 
     def _split_text(self, text: str) -> List[str]:
@@ -77,8 +78,8 @@ class SemanticSplitter:
         List[str]
             A list of sentences extracted from the input text.
         """
-        pattern = r"(?<=[.!?])\s+|(?<=\n\n)"
-        segments = [segment for segment in re.split(pattern, text) if segment]
+        pattern = r"[А-Я][^А-Я]*"
+        segments = [segment for segment in re.findall(pattern, text) if segment]
         return segments
 
     def _combine_sentences(self, sentences: List[str]) -> List[str]:
@@ -113,7 +114,7 @@ class SemanticSplitter:
         combined_sentences = []
         for i in range(len(sentences)):
             if (i-self.buffer_back)>=0 and (i+self.buffer_forward)<=len(sentences):
-                combined = sentences[(i - self.buffer_back):(i+self.buffer_forward+1)]
+                combined = ''.join(sentences[(i - self.buffer_back):(i+self.buffer_forward+1)])
                 combined_sentences.append(combined)
             else:
                 pass
@@ -170,8 +171,8 @@ class SemanticSplitter:
         >>> splitter._find_breakpoints(distances)
         [3, 4]
         """
-        threshold = self.threshold
-        return [i for i in range(len(distances)) if distances[i] > threshold]
+        quantile = np.quantile(a=distances, q=self.threshold/100)
+        return [i for i in range(len(distances)) if distances[i] > quantile]
 
     def _group_sentences(
         self, sentences: List[str], breakpoints: List[int]

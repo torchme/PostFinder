@@ -14,7 +14,7 @@ from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup
 from src.utils.ui_helpers import update_loading_message
-from src.utils.yt_scrapper import parse_video
+from src.utils.yt_scrapper import parse_video, get_youtube_docs
 router = Router()
 
 
@@ -72,7 +72,8 @@ async def find_answer(message: types.Message, command: CommandObject):
         return
     elif video_url:
         chunks = parse_video(video_id=video_url)
-        # docs = get_youtube_docs(chunks)    ## will be added
+        docs = get_youtube_docs(query, chunks)
+        print(docs)
     start_time = time.time()
     msg = await message.answer("👀 Ищем ответы...")
     
