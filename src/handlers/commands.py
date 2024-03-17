@@ -73,7 +73,6 @@ async def find_answer(message: types.Message, command: CommandObject):
     elif video_url:
         chunks = parse_video(video_id=video_url)
         docs = get_youtube_docs(query, chunks)
-        print(docs)
     start_time = time.time()
     msg = await message.answer("👀 Ищем ответы...")
     
@@ -85,7 +84,7 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     retriever = chroma_manager.collection.as_retriever()
     docs = retriever.get_relevant_documents(extractor.add_features(query=query), search_kwargs={"k": 5})
-
+    
     context_text = "\n\n---\n\n".join([doc.page_content for doc in docs])
     relevant_post_urls = [
         f"[Пост {i+1}](t.me/{channel}/{doc.metadata['message_id']})"
