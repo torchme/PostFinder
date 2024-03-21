@@ -45,9 +45,15 @@ async def admin_action(
             f"✅ Одобрено:\nusername: {username}\nuser_id: {user_id}\n\nЕсли захотите удалить пользователя, используйте /del_user [user_id]",
             parse_mode=None,
         )
+        await bot.send_message(
+            int(user_id), "✅ Спасибо за ожидание! Вам выдан доступ к боту"
+        )
     else:
         await bot.send_message(
             ADMIN_CHAT_ID,
             f"❌ Отказано:\nusername: {username}\nuser_id: {user_id}",
             parse_mode=None,
+        )
+        await bot.send_message(
+            int(user_id), "❌ К сожалению, Вам отказано в доступе к боту"
         )

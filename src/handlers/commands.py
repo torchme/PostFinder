@@ -25,6 +25,7 @@ async def send_welcome(message: types.Message):
     Sends a welcome message to the user and registers the user in the system if not already registered.
     Takes a message object as input.
     """
+    print("CHAT ID " + str(message.chat.id))
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
         welcome_message = config["messages"]["welcome"]
@@ -58,6 +59,9 @@ async def send_welcome(message: types.Message):
             first_name=first_name,
             last_name=last_name,
         )
+        await message.answer(
+            "Ваш аккаунт в статусе рассмотрения модерацией, пожалуйста, ожидайте"
+        )
 
 
 @router.message(Command(commands="find"))
@@ -74,7 +78,7 @@ async def find_answer(message: types.Message, command: CommandObject):
     """
     if message.from_user.id not in WHITELIST:
         await message.answer(
-            "Вы еще не прошли модерацию, пожалуйста, ожидайте"
+            "Error: You don't have rights for this.\n\nContact @redpf for rights"
         )
         return
 

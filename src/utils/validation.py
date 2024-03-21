@@ -8,7 +8,8 @@ def validate_parse_command_args(args_str: Optional[str]):
         return (
             None,
             None,
-            "No arguments provided.\nPlease specify the channel after the command, e.g., /parse channel_name",
+            None,
+            "Аргументы не были переданы.\nПожалуйста, уточните канал и Ваш запрос, после команды\n\n_Например: /find @postfinder Как найти нужный пост в группе?_ ",
         )
     args = args_str.split()
     channel = args[0].replace("@", "")

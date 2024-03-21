@@ -1,6 +1,7 @@
 import asyncio
 
 from aiogram.types import BotCommand
+from aiogram.methods import DeleteWebhook
 from loguru import logger
 
 from src.app.loader import bot, dp
@@ -28,6 +29,7 @@ class PostFinderBot:
         """
         Starts the bot by polling the dispatcher.
         """
+        await bot(DeleteWebhook(drop_pending_updates=True))
         await dp.start_polling(bot)
 
     async def startup_event(self):
