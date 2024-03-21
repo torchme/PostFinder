@@ -1,9 +1,10 @@
 import re
-import requests
-from langchain_community.document_loaders import YoutubeLoader
-from src.app.loader import semantic_splitter, emb_fn
 import numpy as np
+from langchain_community.document_loaders import YoutubeLoader
+from langchain.docstore.document import Document
 from annoy import AnnoyIndex 
+from src.app.loader import semantic_splitter, emb_fn
+
 
 def get_subtitles(video_id:str):
     '''
@@ -17,11 +18,11 @@ def get_subtitles(video_id:str):
     docs = loader.load()
     return docs[0].page_content
 
-def parse_video(video_id:str):
+def split_subtitles(subtitles:str):
     '''
-    Function to split video subtitle to chunks with langchain SemunticChunker
+    Function to split video subtitles to chunks with langchain SemunticChunker
     '''
-    subtitles = get_subtitles(video_id=video_id)
+    print(subtitles)
     sents = re.findall('[А-Я][^А-Я]*', subtitles)
     text_with_punctuation = ''.join(map(lambda x: x.strip()+'. ', sents))
     chunks = semantic_splitter.create_documents([text_with_punctuation])
@@ -30,7 +31,7 @@ def parse_video(video_id:str):
 
 def get_youtube_docs(query:str, chunks:list):
     '''
-    Function for semantic search
+    Function for semantic search with spotify annoy
     '''
     query_embedding = emb_fn.embed_query(query)
     chunks_embeddings = emb_fn.embed_documents(chunks)
@@ -38,6 +39,20 @@ def get_youtube_docs(query:str, chunks:list):
     for i in range(len(chunks_embeddings)):
         t.add_item(i, chunks_embeddings[i])
     t.build(10)
-    index = t.get_nns_by_vector(vector=query_embedding, n=1)
+    index = t.get_nns_by_vector(vector=query_embedding, n=1)[0]
+    print(index)
     docs = chunks[index] 
     return docs
+
+
+def youtube_semantic_search(video_id:str, query:str):
+    '''
+    Final pipeline function
+    '''
+    subtitles = get_subtitles(video_id=video_id)
+    chunks = split_subtitles(subtitles=subtitles)
+    relevant_doc = get_youtube_docs(query, chunks)
+    relevant_doc = Document(page_content=relevant_doc,
+                            metadata={"source": "local"})
+    
+    return [relevant_doc], ['a', 'b']

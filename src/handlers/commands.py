@@ -14,7 +14,8 @@ from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup
 from src.utils.ui_helpers import update_loading_message
-from src.utils.yt_scrapper import parse_video, get_youtube_docs
+from src.utils.yt_processing import youtube_semantic_search
+from src.utils.tg_processing import telegram_semantic_search
 router = Router()
 
 
@@ -66,30 +67,19 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     args = command.args
     channel, video_url, query, _, error_message = validate_parse_command_args(args)
-
+    print(video_url)
     if error_message:
         await message.answer(error_message)
         return
-    elif video_url:
-        chunks = parse_video(video_id=video_url)
-        docs = get_youtube_docs(query, chunks)
-    start_time = time.time()
-    msg = await message.answer("👀 Ищем ответы...")
-    
-    update_task = asyncio.create_task(update_loading_message(msg))
-
-    chroma_manager = ChromaManager(channel=channel)
-
-    await chroma_manager.update_collection()
-
-    retriever = chroma_manager.collection.as_retriever()
-    docs = retriever.get_relevant_documents(extractor.add_features(query=query), search_kwargs={"k": 5})
-    
+    else:
+        start_time = time.time()
+        msg = await message.answer("👀 Ищем ответы...")
+        update_task = asyncio.create_task(update_loading_message(msg))
+        if video_url:
+            docs, relevant_post_urls = youtube_semantic_search(video_id=video_url, query=query)
+        elif channel:
+            docs, relevant_post_urls = await telegram_semantic_search(channel=channel, query=query)    
     context_text = "\n\n---\n\n".join([doc.page_content for doc in docs])
-    relevant_post_urls = [
-        f"[Пост {i+1}](t.me/{channel}/{doc.metadata['message_id']})"
-        for i, doc in enumerate(docs)
-    ][:5]
 
     QUERY_PROMPT = PromptTemplate(
         input_variables=["question", "context"],
@@ -127,7 +117,7 @@ async def find_answer(message: types.Message, command: CommandObject):
     await pg_manager.add_action(
         telegram_id=message.from_user.id,
         response_id=msg.message_id,
-        platform_type="telegram",
+        platform_type="telegram" if channel else "youtube",
         resource_name=channel,
         prompt=prompt,
         query=query,
