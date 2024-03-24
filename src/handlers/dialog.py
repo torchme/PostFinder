@@ -2,12 +2,11 @@ import time
 from aiogram import Router, types
 from langchain.schema import HumanMessage, AIMessage
 from loguru import logger
-import yaml
 
 from src.app.loader import pg_manager, llm, encoding
 from src.utils.filters import MessageReplyFilter
-from src.utils.markup import inline_markup
-from src.config import config_path
+from src.utils.markup import inline_markup_feedback
+from src.config import config
 
 router = Router()
 
@@ -18,6 +17,12 @@ async def dialog(message: types.Message):
     Asynchronous function that handles a dialog message and performs various operations on the message content and context.
     Takes a types.Message object as a parameter. Does not return anything.
     """
+    if message.from_user.id not in config.whitelist:
+        await message.answer(
+            "Error: You don't have rights for this.\n\nContact @redpf for rights"
+        )
+        return
+
     start_time = time.time()
 
     previous_context = await pg_manager.get_previous_context(
@@ -53,7 +58,7 @@ async def dialog(message: types.Message):
     msg_text += "\n\n🔹 Чтобы продолжить, ответьте на это сообщение"
     await msg.edit_text(
         msg_text,
-        reply_markup=inline_markup(message_id=msg.message_id),
+        reply_markup=inline_markup_feedback(message_id=msg.message_id),
         disable_web_page_preview=True,
     )
 
@@ -77,24 +82,3 @@ async def dialog(message: types.Message):
     )
 
     logger.info(f"Action for user {message.from_user.id} processed!")
-
-
-@router.message()
-async def unknown_message(message: types.Message):
-    """
-    Asynchronous function that handles unknown messages and sends an error response.
-
-    Parameters
-    ----------
-    message : types.Message
-        The message object representing the unknown message.
-
-    Returns
-    -------
-    None
-    """
-    with open(config_path, "r", encoding="utf-8") as f:
-        config = yaml.safe_load(f)
-        unknown_message_error = config["messages"]["unknown_message_error"]
-
-    await message.answer(unknown_message_error)

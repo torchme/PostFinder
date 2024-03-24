@@ -1,12 +1,16 @@
 messages:
   welcome: |
-    Привет! Я — *KarpovGPT*🤖, бот для помощи в обучении.
-    Ты можешь *задавать вопросы* и *получать ответы* на основе курсов!
-    А так же я могу помочь *создавать конспекты*👨‍💻!
+    Привет! Я — *PostFinder*, инструмент, который изменит твое взаимодействие с социальными сетями.
+
+    Если вы постоянно теряетесь в ТОННЕ КОНТЕНТА,
+    приходиться листать БЕСКОНЕЧНОЕ количество постов и никак не можете найти ТОТ САМЫЙ пост? То вы пришли в нужное место!
 
     *Команды:*
     - /help - показывает эту справку
     - /start - начало диалога
+    - /find `<@channel> <Запрос>` - ищет ответ на Ваш вопрос в указанном канале
+
+    _Например: /find @postfinder Как найти нужный пост в группе?_
 
   unknown_message_error: |
     🚫 Я не распознал ваш запрос.
@@ -22,16 +26,22 @@ templates:
     ----------------------------------------
     Instruction:
     1) You must use language as in original query
-    2) Do not duplicate the query in your response. 
+    2) Do not duplicate the query in your response.
     3) Do not use words from original query in your response, your tags must be new and unique
     4) Write the tags in the order of relevance, separated by commas, without any other characters.
 
     Examples:
     Query: 'Какой рецепт борща?'
-    Answer: 'Кулинария, суп' 
+    Answer: 'Кулинария, суп'
 
-    Query: 'Кто создал ChatGPT?' 
-    Answer: 'AI, OpenAI, LLM' 
+    Query: 'Кто создал ChatGPT?'
+    Answer: 'AI, OpenAI, LLM'
 
     Query: 'Что такое МЛ симулятор?'
     Answer: 'Машинное обучение, искусственный интеллект'
+
+users:
+  - 11
+
+admins:
+  - 2

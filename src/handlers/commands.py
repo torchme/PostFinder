@@ -1,7 +1,6 @@
 import asyncio
 import time
 
-import yaml
 from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
 from langchain.prompts import PromptTemplate
@@ -9,11 +8,12 @@ from langchain.prompts import PromptTemplate
 from loguru import logger
 from src.app.loader import llm, pg_manager, bot, encoding, extractor
 from src.database.chroma_service import ChromaManager
-from src.config import config_path
+from src.config import config
 from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
-from src.utils.markup import inline_markup
+from src.utils.markup import inline_markup_feedback
 from src.utils.ui_helpers import update_loading_message
+from src.utils.admin_service import send_to_admins
 
 router = Router()
 
@@ -24,9 +24,7 @@ async def send_welcome(message: types.Message):
     Sends a welcome message to the user and registers the user in the system if not already registered.
     Takes a message object as input.
     """
-    with open(config_path, "r", encoding="utf-8") as f:
-        config = yaml.safe_load(f)
-        welcome_message = config["messages"]["welcome"]
+    welcome_message = config.welcome_message()
 
     await message.answer(welcome_message)
 
@@ -50,6 +48,17 @@ async def send_welcome(message: types.Message):
     else:
         logger.info(f"User {telegram_id} is already registered!")
 
+    if telegram_id not in config.whitelist:
+        await send_to_admins(
+            user_id=telegram_id,
+            username="@" + username,
+            first_name=first_name,
+            last_name=last_name,
+        )
+        await message.answer(
+            "Ваш аккаунт в статусе рассмотрения модерацией, пожалуйста, ожидайте"
+        )
+
 
 @router.message(Command(commands="find"))
 async def find_answer(message: types.Message, command: CommandObject):
@@ -63,11 +72,13 @@ async def find_answer(message: types.Message, command: CommandObject):
         command: aiogram.filters.CommandObject
             The command object containing arguments.
     """
+    if message.from_user.id not in config.whitelist:
+        await message.answer("Вы еще не прошли модерацию, пожалуйста, ожидайте")
+        return
 
     args = command.args
     channel, query, _, error_message = validate_parse_command_args(args)
-    
-    
+
     if error_message:
         await message.answer(error_message)
         return
@@ -82,7 +93,9 @@ async def find_answer(message: types.Message, command: CommandObject):
     await chroma_manager.update_collection()
 
     retriever = chroma_manager.collection.as_retriever()
-    docs = retriever.get_relevant_documents(extractor.add_features(query=query), search_kwargs={"k": 5})
+    docs = retriever.get_relevant_documents(
+        extractor.add_features(query=query), search_kwargs={"k": 5}
+    )
 
     context_text = "\n\n---\n\n".join([doc.page_content for doc in docs])
     relevant_post_urls = [
@@ -116,7 +129,7 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     await msg.edit_text(
         msg_text,
-        reply_markup=inline_markup(message_id=msg.message_id),
+        reply_markup=inline_markup_feedback(message_id=msg.message_id),
         disable_web_page_preview=True,
     )
 
