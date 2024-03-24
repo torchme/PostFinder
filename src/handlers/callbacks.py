@@ -1,7 +1,7 @@
 from aiogram import F, Router, types
 
 from src.app.loader import pg_manager, bot
-from src.config import ADMIN_CHAT_ID, WHITELIST
+from src.config import ADMIN_CHAT_ID, config
 from src.utils.schemas import FeedbackCallback, AdminCallback
 
 router = Router()
@@ -35,10 +35,7 @@ async def admin_action(
     username = callback_data.username
 
     if callback_data.action == "approve":
-        WHITELIST.append(user_id)
-
-        with open("src/artifacts/whitelist.txt", "a") as file:
-            file.write(str(user_id) + "\n")
+        config.add_id(id_type="users", user_id=user_id)
 
         await bot.send_message(
             ADMIN_CHAT_ID,

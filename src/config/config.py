@@ -3,6 +3,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from src.config.managment import Config
+
 env_state = os.getenv("ENV_STATE", "development")
 
 if env_state == "docker":
@@ -27,12 +29,8 @@ DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_PASS = os.getenv("DB_PASS")
 
-config_path = "src/config/config.yaml"
-
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
 
-with open("src/artifacts/admins.txt") as file:
-    ADMIN_IDS = list(map(int, file.readlines()))
+CONFIG_PATH = "src/config/config.yaml"
 
-with open("src/artifacts/whitelist.txt") as file:
-    WHITELIST = list(map(int, file.readlines()))
+config = Config(filename=CONFIG_PATH)
