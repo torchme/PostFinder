@@ -24,3 +24,4 @@ async def get_feedback(
         response_id=int(callback_data.message_id), feedback=callback_data.feedback
     )
     await callback_query.answer(callback_data.feedback)
+    await callback_query.message.edit_reply_markup(reply_markup=None)

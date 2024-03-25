@@ -1,6 +1,5 @@
 import asyncio
 import time
-import logging
 import yaml
 from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
@@ -14,15 +13,8 @@ from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup
 from src.utils.ui_helpers import update_loading_message
-import re
+
 router = Router()
-logging.basicConfig(level=logging.INFO, filename='/home/umbilnm/PostFinder/src/handlers/logging.log')
-logger = logging.getLogger('example_logger')
-logger.setLevel(logging.DEBUG)
-class InfoFilter(logging.Filter):
-    def filter(self, record):
-        return record.levelno == logging.INFO
-logger.addFilter(InfoFilter())
 @router.message(Command(commands=["start", "help"]))
 async def send_welcome(message: types.Message):
     """
@@ -90,9 +82,8 @@ async def find_answer(message: types.Message, command: CommandObject):
     docs = retriever.get_relevant_documents(extractor.add_features(query=query), search_kwargs={"k": 5})
 
     context_text = "\n\n---\n\n".join([f'Text №{i}' + doc .page_content for i, doc in enumerate(docs)])
-    logger.info(context_text)
     relevant_post_urls = [
-        f"[Пост {i+1}](t.me/{channel}/{doc.metadata['message_id']})"
+        f"[{doc.page_content[:40]}...](t.me/{channel}/{doc.metadata['message_id']})"
         for i, doc in enumerate(docs)
     ][:5]
     logger.info(relevant_post_urls)
@@ -102,17 +93,7 @@ async def find_answer(message: types.Message, command: CommandObject):
         template="""Answer the question based on the context below. Use language as in question. "\n\nContext: {context}\n\n---\n\nQuestion: {question}\nAnswer:""",
     )
 
-    TITLES_TEMPLATE = PromptTemplate(input_variables=["context"],
-                                   template="""Come up with title for each text in context.
-                                   Context: {context}
-                                   Follow template below.
-                                   Use language as in context  
-                                   'Text №1: <Title 1>
-                                    Text №2: <Title 2>
-                                    Text №2: <Title 3>...'""")
-
     query_prompt = QUERY_TEAMPLATE.format(context=context_text, question=query)
-    title_prompt = TITLES_TEMPLATE.format(context=context_text)                    
     update_task.cancel()
     msg_text = "🙋🏼‍♂️ *Ваш вопрос:*\n" + query + "\n\n🔍 *Найденный ответ:*\n"
     await msg.edit_text(msg_text)
@@ -124,20 +105,6 @@ async def find_answer(message: types.Message, command: CommandObject):
         if (len(msg_text.split()) % 7 == 0) and len(msg_text.split()) >= 7:
             await msg.edit_text(msg_text)
 
-    post_titles = ''
-    async for stream_response in llm.astream(title_prompt):
-        post_titles += stream_response.content
-
-    
-    pattern = re.compile(r'Text №\d+: (.+)')
-    titles = pattern.findall(post_titles)
-
-    relevant_post_urls = [
-        f"[{titles[i]}](t.me/{channel}/{doc.metadata['message_id']})"
-        for i, doc in enumerate(docs)
-    ][:5]
-
-
     msg_text += "\n\n• " + "\n• ".join(relevant_post_urls)
     msg_text += "\n\n🔹 Чтобы продолжить, ответьте на это сообщение"
 
@@ -146,7 +113,8 @@ async def find_answer(message: types.Message, command: CommandObject):
         reply_markup=inline_markup(message_id=msg.message_id),
         disable_web_page_preview=True,
     )
-    input_tokens = len(encoding.encode(query_prompt)) + len(encoding.encode(query_prompt)) 
+    
+    input_tokens = len(encoding.encode(query_prompt))) 
     output_tokens = len(encoding.encode(response))
     end_time = time.time()
     execution_time = int(end_time - start_time)
