@@ -114,7 +114,7 @@ async def find_answer(message: types.Message, command: CommandObject):
         disable_web_page_preview=True,
     )
     
-    input_tokens = len(encoding.encode(query_prompt))) 
+    input_tokens = len(encoding.encode(query_prompt)) 
     output_tokens = len(encoding.encode(response))
     end_time = time.time()
     execution_time = int(end_time - start_time)
