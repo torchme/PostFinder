@@ -6,12 +6,6 @@ from src.utils.schemas import FeedbackCallback
 def inline_markup(message_id: int) -> InlineKeyboardMarkup:
     buttons = [
         InlineKeyboardButton(
-            text="👍",
-            callback_data=FeedbackCallback(
-                type="user_evaluation", message_id=str(message_id), feedback="like"
-            ).pack(),
-        ),
-        InlineKeyboardButton(
             text="👎",
             callback_data=FeedbackCallback(
                 type="user_evaluation", message_id=str(message_id), feedback="dislike"
