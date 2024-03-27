@@ -82,11 +82,11 @@ async def find_answer(message: types.Message, command: CommandObject):
     docs = retriever.get_relevant_documents(extractor.add_features(query=query), search_kwargs={"k": 5})
 
     context_text = "\n\n---\n\n".join([f'Text №{i}' + doc .page_content for i, doc in enumerate(docs)])
+    cut_length = [7 if len(doc.page_content.split()) > 7 else len(doc.page_content.split()) for doc in docs]
     relevant_post_urls = [
-        f"[{doc.page_content[:40]}...](t.me/{channel}/{doc.metadata['message_id']})"
+        f"[{' '.join(doc.page_content.split()[:(cut_length[i])])}...](t.me/{channel}/{doc.metadata['message_id']})"
         for i, doc in enumerate(docs)
     ][:5]
-    logger.info(relevant_post_urls)
 
     QUERY_TEAMPLATE = PromptTemplate(
         input_variables=["question", "context"],
