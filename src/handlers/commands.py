@@ -81,7 +81,7 @@ async def find_answer(message: types.Message, command: CommandObject):
     retriever = chroma_manager.collection.as_retriever()
     docs = retriever.get_relevant_documents(extractor.add_features(query=query), search_kwargs={"k": 5})
 
-    context_text = "\n\n---\n\n".join([f'Text №{i}' + doc .page_content for i, doc in enumerate(docs)])
+    context_text = "\n\n---\n\n".join([f'Text №{i}' + doc.page_content for i, doc in enumerate(docs)])
     cut_length = [7 if len(doc.page_content.split()) > 7 else len(doc.page_content.split()) for doc in docs]
     relevant_post_urls = [
         f"[{' '.join(doc.page_content.split()[:(cut_length[i])])}...](t.me/{channel}/{doc.metadata['message_id']})"
