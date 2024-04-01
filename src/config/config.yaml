@@ -25,7 +25,7 @@ messages:
         User {} was removed
       fail: |
         User ID not found in the whitelist.
-    add: 
+    add:
       success: |
         User {} was successfully added!
       fail: |

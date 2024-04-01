@@ -1,5 +1,5 @@
 from src.app.loader import bot
-from src.config import ADMIN_CHAT_ID, WHITELIST, config
+from src.config import ADMIN_CHAT_ID, WHITELIST
 from src.utils.markup import inline_markup_admin
 
 
