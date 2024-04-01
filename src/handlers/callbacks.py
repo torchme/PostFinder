@@ -39,18 +39,19 @@ async def admin_action(
 
         await bot.send_message(
             ADMIN_CHAT_ID,
-            f"✅ Одобрено:\nusername: {username}\nuser_id: {user_id}\n\nЕсли захотите удалить пользователя, используйте /del_user [user_id]",
+            config.get(['callback', 'approve', 'admins']).format(username=username, user_id=user_id),
             parse_mode=None,
         )
         await bot.send_message(
-            int(user_id), "✅ Спасибо за ожидание! Вам выдан доступ к боту"
+            int(user_id), config.get(['callback', 'approve', 'user'])
         )
     else:
         await bot.send_message(
             ADMIN_CHAT_ID,
-            f"❌ Отказано:\nusername: {username}\nuser_id: {user_id}",
+            config.get(['callback', 'deny', 'admins']).format(username=username, user_id=user_id),
+
             parse_mode=None,
         )
         await bot.send_message(
-            int(user_id), "❌ К сожалению, Вам отказано в доступе к боту"
+            int(user_id), config.get(['callback', 'deny', 'user'])
         )

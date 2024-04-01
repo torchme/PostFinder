@@ -1,3 +1,14 @@
+callback: 
+  approve: 
+    admins: | 
+      ✅ Одобрено:\nusername: {username}\nuser_id: {user_id}\n\nЕсли захотите удалить пользователя, используйте /del_user [user_id] 
+    user: |
+      ✅ Спасибо за ожидание! Вам выдан доступ к боту
+    deny:
+      admins  : |
+        ❌ Отказано:\nusername: {username}\nuser_id: {user_id}
+      user: |
+        ❌ К сожалению, Вам отказано в доступе к боту
 messages:
   welcome: |
     Привет! Я — *PostFinder*, инструмент, который изменит твое взаимодействие с социальными сетями.

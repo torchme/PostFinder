@@ -60,7 +60,6 @@ class Config:
         """
         Remove a user or admin ID from the respective list in the configuration and update the attribute.
 
-
         Parameters
         ----------
         id_type : str

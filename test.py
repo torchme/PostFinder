@@ -1,4 +1,3 @@
 from src.config import config
-
-# config = config._load_config()
-print(config.get(['messages', 'admin', 'add', 'success']).format(82))
+username = 5
+print(config.get(['callback', 'approve']))
