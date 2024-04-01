@@ -34,4 +34,3 @@ ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
 CONFIG_PATH = "src/config/config.yaml"
 
 config = Config(filename=CONFIG_PATH)
-config.load_ids()
