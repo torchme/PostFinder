@@ -90,7 +90,7 @@ class Config:
             logger.error(f"ID {user_id} not found in the {id_type} list.")
             return False
 
-    def get(self, keys: list)  -> str:
+    def get(self, keys: list, if_na=None)  -> str:
         """
         Get value from config.
         Parameters
@@ -112,8 +112,9 @@ class Config:
             return value
         
         except Exception:
-            # logger.error(f"Failed to get value by keys {keys}")
-            print(f"Failed to get value by keys {keys}")
+            logger.error(f"Failed to get value by keys {keys}")
+            return if_na
+    
     def _load_config(self) -> dict:
         try:
             with open(self.filename, "r", encoding="utf-8") as file:
