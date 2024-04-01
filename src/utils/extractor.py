@@ -5,7 +5,7 @@ from src.config import config
 class Extractor:
     def __init__(self, llm):
         self.llm = llm
-        extract_template = config.extract_template()
+        extract_template = config.get(['templates', 'extract'])
         self.template = PromptTemplate(
             input_variables=["query"], template=extract_template
         )

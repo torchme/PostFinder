@@ -19,7 +19,7 @@ async def dialog(message: types.Message):
     """
     if message.from_user.id not in config.whitelist:
         await message.answer(
-            "Error: You don't have rights for this.\n\nContact @redpf for rights"
+            config.get(['no_rights'])
         )
         return
 
@@ -55,7 +55,7 @@ async def dialog(message: types.Message):
         if (len(msg_text.split()) % 7 == 0) and len(msg_text.split()) >= 7:
             await msg.edit_text(msg_text)
 
-    msg_text += "\n\n🔹 Чтобы продолжить, ответьте на это сообщение"
+    msg_text += config.get(['messages','action_to_continue'])
     await msg.edit_text(
         msg_text,
         reply_markup=inline_markup_feedback(message_id=msg.message_id),

@@ -90,14 +90,30 @@ class Config:
             logger.error(f"ID {user_id} not found in the {id_type} list.")
             return False
 
-    def welcome_message(self) -> str:
+    def get(self, keys: list)  -> str:
+        """
+        Get value from config.
+        Parameters
+        ----------
+        keys: list
+            List of strings(keys for yaml)  ('admins' or 'users').
+        Returns
+        -------
+        int or str
+            Value from yaml config.
+        """
         config = self._load_config()
-        return config["messages"]["welcome"]
-
-    def extract_template(self) -> str:
-        config = self._load_config()
-        return config["templates"]["extract"]
-
+        value = config
+        pointer = 0
+        try:
+            while pointer!=len(keys):
+                value = value[keys[pointer]]
+                pointer += 1
+            return value
+        
+        except Exception as e:
+            # logger.error(f"Failed to get value by keys {keys}")
+            print(f"Failed to get value by keys {keys}")
     def _load_config(self) -> dict:
         try:
             with open(self.filename, "r", encoding="utf-8") as file:
@@ -113,3 +129,4 @@ class Config:
             logger.info(f"Configuration saved to {self.filename}")
         except Exception as e:
             logger.error(f"Failed to save configuration: {e}")
+

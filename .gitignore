@@ -171,3 +171,5 @@ cython_debug/
 .env-docker
 .DS_Store
 src/artifacts/migrations/versions/*.py
+chroma_db/
+src/artifacts/sessions/

@@ -1,7 +1,7 @@
 from typing import List, Optional, Tuple
 from aiogram import types
 from aiogram.filters import CommandObject
-
+from src.config import config
 
 def validate_parse_command_args(args_str: Optional[str]):
     if not args_str:
@@ -9,7 +9,7 @@ def validate_parse_command_args(args_str: Optional[str]):
             None,
             None,
             None,
-            "Аргументы не были переданы.\nПожалуйста, уточните канал и Ваш запрос, после команды\n\n_Например: /find @postfinder Как найти нужный пост в группе?_ ",
+            config.get(['messages', 'parse_error']),
         )
     args = args_str.split()
     channel = args[0].replace("@", "")

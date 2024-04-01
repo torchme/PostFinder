@@ -16,10 +16,9 @@ async def add_user(message: types.Message, command: CommandObject):
         return
 
     if config.add_id(id_type="users", user_id=user_id):
-        await message.answer(f"User {user_id} was successfully added!")
+        await message.answer(config.get(['messages', 'admin', 'add', 'success']).format(user_id))
     else:
-        await message.answer(f"User {user_id} is already in whitelist!")
-
+        await message.answer(config.get(['messages', 'admin', 'add', 'fail']).format(user_id))
 
 @router.message(Command(commands="del_user"))
 async def del_user(message: types.Message, command: CommandObject):
@@ -30,6 +29,6 @@ async def del_user(message: types.Message, command: CommandObject):
         return
 
     if config.remove_id(id_type="users", user_id=user_id):
-        await message.answer(f"User {user_id} was removed")
+        await message.answer(config.get(['messages', 'admin', 'remove', 'success']).format(user_id))
     else:
-        await message.answer("User ID not found in the whitelist.")
+        await message.answer(config.get(['messages', 'admin', 'remove', 'fail']))

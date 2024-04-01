@@ -24,7 +24,7 @@ async def send_welcome(message: types.Message):
     Sends a welcome message to the user and registers the user in the system if not already registered.
     Takes a message object as input.
     """
-    welcome_message = config.welcome_message()
+    welcome_message = config.get(['messages', 'welcome'])
 
     await message.answer(welcome_message)
 
@@ -73,7 +73,7 @@ async def find_answer(message: types.Message, command: CommandObject):
             The command object containing arguments.
     """
     if message.from_user.id not in config.whitelist:
-        await message.answer("Вы еще не прошли модерацию, пожалуйста, ожидайте")
+        await message.answer(config.get(['messages', 'moderation']))
         return
 
     args = command.args
