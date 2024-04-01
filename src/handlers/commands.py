@@ -56,7 +56,7 @@ async def send_welcome(message: types.Message):
             last_name=last_name,
         )
         await message.answer(
-            "Ваш аккаунт в статусе рассмотрения модерацией, пожалуйста, ожидайте"
+            config.get(['messages', 'moderation_answer'])
         )
 
 
@@ -125,7 +125,7 @@ async def find_answer(message: types.Message, command: CommandObject):
     output_tokens = len(encoding.encode(response))
 
     msg_text += "\n\n• " + "\n• ".join(relevant_post_urls)
-    msg_text += "\n\n🔹 Чтобы продолжить, ответьте на это сообщение"
+    msg_text += config.get(['messages', 'action_to_continue'])
 
     await msg.edit_text(
         msg_text,
@@ -154,4 +154,4 @@ async def find_answer(message: types.Message, command: CommandObject):
 
 @router.message(UnknownCommandFilter())
 async def unknown_command(message: types.Message):
-    await message.answer("Упс... Похоже я не знаю такой команды 😬")
+    await message.answer(config.get(['messages', 'unknown']))
