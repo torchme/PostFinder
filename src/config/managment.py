@@ -111,7 +111,7 @@ class Config:
                 pointer += 1
             return value
         
-        except Exception as e:
+        except Exception:
             # logger.error(f"Failed to get value by keys {keys}")
             print(f"Failed to get value by keys {keys}")
     def _load_config(self) -> dict:
