@@ -16,8 +16,6 @@ from src.utils.ui_helpers import update_loading_message
 from src.utils.admin_service import send_to_admins
 
 router = Router()
-
-
 @router.message(Command(commands=["start", "help"]))
 async def send_welcome(message: types.Message):
     """
@@ -97,32 +95,29 @@ async def find_answer(message: types.Message, command: CommandObject):
         extractor.add_features(query=query), search_kwargs={"k": 5}
     )
 
-    context_text = "\n\n---\n\n".join([doc.page_content for doc in docs])
+    context_text = "\n\n---\n\n".join([f'Text №{i}' + doc.page_content for i, doc in enumerate(docs)])
+    cut_length = [7 if len(doc.page_content.split()) > 7 else len(doc.page_content.split()) for doc in docs]
     relevant_post_urls = [
-        f"[Пост {i+1}](t.me/{channel}/{doc.metadata['message_id']})"
+        f"[{' '.join(doc.page_content.split()[:(cut_length[i])])}...](t.me/{channel}/{doc.metadata['message_id']})"
         for i, doc in enumerate(docs)
     ][:5]
 
-    QUERY_PROMPT = PromptTemplate(
+    QUERY_TEAMPLATE = PromptTemplate(
         input_variables=["question", "context"],
         template="""Answer the question based on the context below. Use language as in question. "\n\nContext: {context}\n\n---\n\nQuestion: {question}\nAnswer:""",
     )
 
-    prompt = QUERY_PROMPT.format(context=context_text, question=query)
-
+    query_prompt = QUERY_TEAMPLATE.format(context=context_text, question=query)
     update_task.cancel()
     msg_text = "🙋🏼‍♂️ *Ваш вопрос:*\n" + query + "\n\n🔍 *Найденный ответ:*\n"
     await msg.edit_text(msg_text)
     response = ""
 
-    async for stream_response in llm.astream(prompt):
+    async for stream_response in llm.astream(query_prompt):
         response += stream_response.content
         msg_text += stream_response.content
         if (len(msg_text.split()) % 7 == 0) and len(msg_text.split()) >= 7:
             await msg.edit_text(msg_text)
-
-    input_tokens = len(encoding.encode(prompt))
-    output_tokens = len(encoding.encode(response))
 
     msg_text += "\n\n• " + "\n• ".join(relevant_post_urls)
     msg_text += config.get(['messages', 'action_to_continue'])
@@ -132,7 +127,9 @@ async def find_answer(message: types.Message, command: CommandObject):
         reply_markup=inline_markup_feedback(message_id=msg.message_id),
         disable_web_page_preview=True,
     )
-
+    
+    input_tokens = len(encoding.encode(query_prompt)) 
+    output_tokens = len(encoding.encode(response))
     end_time = time.time()
     execution_time = int(end_time - start_time)
 
@@ -141,7 +138,7 @@ async def find_answer(message: types.Message, command: CommandObject):
         response_id=msg.message_id,
         platform_type="telegram",
         resource_name=channel,
-        prompt=prompt,
+        prompt=query_prompt,
         query=query,
         response=response,
         input_tokens=input_tokens,
