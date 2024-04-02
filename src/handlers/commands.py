@@ -120,8 +120,8 @@ async def find_answer(message: types.Message, command: CommandObject):
             await msg.edit_text(msg_text)
 
     msg_text += "\n\n• " + "\n• ".join(relevant_post_urls)
-    msg_text += config.get(['messages', 'action_to_continue'])
-
+    # msg_text += "\n\n🔹 Чтобы продолжить, ответьте на это сообщение"
+    msg_text += f'''\n\n{config.get(['messages', 'action_to_continue'])}'''
     await msg.edit_text(
         msg_text,
         reply_markup=inline_markup_feedback(message_id=msg.message_id),
