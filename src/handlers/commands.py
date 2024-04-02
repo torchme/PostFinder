@@ -1,4 +1,3 @@
-import asyncio
 import time
 
 from aiogram import Router, types
