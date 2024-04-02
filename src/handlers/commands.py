@@ -11,7 +11,6 @@ from src.config import config_path
 from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup
-from src.utils.ui_helpers import update_loading_message
 
 router = Router()
 @router.message(Command(commands=["start", "help"]))
