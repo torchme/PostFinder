@@ -22,6 +22,8 @@ messages:
     - /find `<@channel> <Запрос>` - ищет ответ на Ваш вопрос в указанном канале
 
     _Например: /find @postfinder Как найти нужный пост в группе?_
+  searching: |
+    👀 Ищем ответы...
   parse_error: |
     Аргументы не были переданы.\nПожалуйста, уточните канал и Ваш запрос, после команды\n\n_Например: /find @postfinder Как найти нужный пост в группе?_     
   moderation: |
@@ -32,6 +34,8 @@ messages:
     Error: You don't have rights for this.\n\nContact @redpf for rights
   action_to_continue: |
     🔹 Чтобы продолжить, ответьте на это сообщение    
+  action_processed: |
+    Action for user {} processed!
   unknown: |
     Упс... Похоже я не знаю такой команды 😬
   admin:
@@ -74,7 +78,8 @@ templates:
 
     Query: 'Что такое МЛ симулятор?'
     Answer: 'Машинное обучение, искусственный интеллект'
-
+  prompt: |
+   Answer the question based on the context below. Use language as in question. "\n\nContext: {context}\n\n---\n\nQuestion: {question}\nAnswer:
 users:
   - 11
 

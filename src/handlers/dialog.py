@@ -81,4 +81,4 @@ async def dialog(message: types.Message):
         execution_time=execution_time,
     )
 
-    logger.info(f"Action for user {message.from_user.id} processed!")
+    logger.info(config.get(['messages', 'action_processed']).format(message.from_user.id))

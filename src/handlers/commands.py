@@ -75,7 +75,7 @@ async def find_answer(message: types.Message, command: CommandObject):
         return
 
     args = command.args
-    channel, query, _, error_message = validate_parse_command_args(args)
+    channel, query, _, error_message =validate_parse_command_args(args)
 
     if error_message:
         await message.answer(error_message)
@@ -83,7 +83,7 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     start_time = time.time()
 
-    msg = await message.answer("👀 Ищем ответы...")
+    msg = await message.answer(config.get(['messages', 'searching']))
     update_task = asyncio.create_task(update_loading_message(msg))
 
     chroma_manager = ChromaManager(channel=channel)
@@ -104,7 +104,7 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     QUERY_TEAMPLATE = PromptTemplate(
         input_variables=["question", "context"],
-        template="""Answer the question based on the context below. Use language as in question. "\n\nContext: {context}\n\n---\n\nQuestion: {question}\nAnswer:""",
+        template=config.get(['templates', 'prompt']),
     )
 
     query_prompt = QUERY_TEAMPLATE.format(context=context_text, question=query)
@@ -145,7 +145,7 @@ async def find_answer(message: types.Message, command: CommandObject):
         execution_time=execution_time,
     )
 
-    logger.info(f"Action for user {message.from_user.id} processed!")
+    logger.info(config.get(['messages', 'action_processed']).format(message.from_user.id))
 
 
 @router.message(UnknownCommandFilter())
