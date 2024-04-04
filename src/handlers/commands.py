@@ -23,7 +23,7 @@ async def send_welcome(message: types.Message):
     Sends a welcome message to the user and registers the user in the system if not already registered.
     Takes a message object as input.
     """
-    welcome_message = config.get(['messages', 'welcome'])
+    welcome_message = config.get(["messages", "welcome"])
 
     await message.answer(welcome_message)
 
@@ -54,9 +54,7 @@ async def send_welcome(message: types.Message):
             first_name=first_name,
             last_name=last_name,
         )
-        await message.answer(
-            config.get(['messages', 'moderation_answer'])
-        )
+        await message.answer(config.get(["messages", "moderation_answer"]))
 
 
 @router.message(Command(commands="find"))
@@ -72,10 +70,11 @@ async def find_answer(message: types.Message, command: CommandObject):
             The command object containing arguments.
     """
     if message.from_user.id not in config.whitelist:
-        await message.answer(config.get(['messages', 'moderation']))
+        await message.answer(config.get(["messages", "moderation"]))
         return
 
     args = command.args
+
     channel, query, _, error_message = validate_parse_command_args(args)
 
     if error_message:
@@ -111,7 +110,7 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     QUERY_TEAMPLATE = PromptTemplate(
         input_variables=["question", "context"],
-        template=config.get(['templates', 'prompt']),
+        template=config.get(["templates", "prompt"]),
     )
 
     query_prompt = QUERY_TEAMPLATE.format(context=context_text, question=query)
@@ -127,7 +126,7 @@ async def find_answer(message: types.Message, command: CommandObject):
             await msg.edit_text(msg_text)
 
     msg_text += "\n\n• " + "\n• ".join(relevant_post_urls)
-    msg_text += f'''\n\n{config.get(['messages', 'action_to_continue'])}'''
+    msg_text += f"""\n\n{config.get(['messages', 'action_to_continue'])}"""
     await msg.edit_text(
         msg_text,
         reply_markup=inline_markup_feedback(message_id=msg.message_id),
@@ -152,9 +151,11 @@ async def find_answer(message: types.Message, command: CommandObject):
         execution_time=execution_time,
     )
 
-    logger.info(config.get(['messages', 'action_processed']).format(message.from_user.id))
+    logger.info(
+        config.get(["messages", "action_processed"]).format(message.from_user.id)
+    )
 
 
 @router.message(UnknownCommandFilter())
 async def unknown_command(message: types.Message):
-    await message.answer(config.get(['messages', 'unknown']))
+    await message.answer(config.get(["messages", "unknown"]))
