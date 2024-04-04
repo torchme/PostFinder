@@ -18,6 +18,16 @@ def validate_parse_command_args(args_str: Optional[str]):
 
     return channel, context, limit, ""
 
+def validate_add_channel_command_args(args_str: Optional[str]):
+    if not args_str:
+        return (
+            None,
+            config.get(['messages', 'errors', 'parse_channel_error']),
+        )
+    args = args_str.split()
+    channel = args[0].replace("@", "")
+    return channel, ""
+
 
 def validate_id(
     message: types.Message, command: CommandObject, admin_ids: List[int]

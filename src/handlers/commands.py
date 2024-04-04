@@ -13,8 +13,8 @@ from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup_feedback
 from src.utils.ui_helpers import update_loading_message
-from src.utils.admin_service import send_to_admins
-
+from src.utils.admin_service import send_user_to_admins, send_channel_to_admins
+from src.utils.antifrod import validate_channel
 router = Router()
 @router.message(Command(commands=["start", "help"]))
 async def send_welcome(message: types.Message):
@@ -47,14 +47,14 @@ async def send_welcome(message: types.Message):
         logger.info(f"User {telegram_id} is already registered!")
 
     if telegram_id not in config.whitelist:
-        await send_to_admins(
+        await send_user_to_admins(
             user_id=telegram_id,
             username="@" + username,
             first_name=first_name,
             last_name=last_name,
         )
         await message.answer(
-            config.get(['messages', 'moderation_answer'])
+            config.get(['messages', 'moderation', 'answer'])
         )
 
 
@@ -71,7 +71,7 @@ async def find_answer(message: types.Message, command: CommandObject):
             The command object containing arguments.
     """
     if message.from_user.id not in config.whitelist:
-        await message.answer(config.get(['messages', 'moderation']))
+        await message.answer(config.get(['messages', 'moderation','processing']))
         return
 
     args = command.args
@@ -147,6 +147,28 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     logger.info(config.get(['messages', 'action_processed']).format(message.from_user.id))
 
+
+
+@router.message(Command(commands=["add_channel"]))
+async def send_welcome(message: types.Message,  command: CommandObject):
+    if message.from_user.id not in config.whitelist:
+        await message.answer(config.get(['messages', 'moderation', 'channel', 'processing']))
+        return
+
+    args = command.args
+    channel, error_message = validate_parse_command_args(args)
+    if error_message:
+        await message.answer(error_message)
+        return
+    
+    elif not await validate_channel(channel):
+        await message.answer(config.get(['messages', 'moderation','channel', 'deny']).format(channel=channel))
+        return
+    
+    else:
+        await send_channel_to_admins(channel)
+
+        
 
 @router.message(UnknownCommandFilter())
 async def unknown_command(message: types.Message):
