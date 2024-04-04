@@ -1,3 +1,4 @@
+import asyncio
 import time
 
 from aiogram import Router, types
@@ -10,7 +11,9 @@ from src.database.chroma_service import ChromaManager
 from src.config import config
 from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
-from src.utils.markup import inline_markup
+from src.utils.markup import inline_markup_feedback
+from src.utils.ui_helpers import update_loading_message
+from src.utils.admin_service import send_to_admins
 
 router = Router()
 @router.message(Command(commands=["start", "help"]))
@@ -80,7 +83,8 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     start_time = time.time()
 
-    msg = await message.answer("👀 Ищем ответы...")
+    msg = await message.answer(config.get(['messages', 'searching']))
+    update_task = asyncio.create_task(update_loading_message(msg))
 
     chroma_manager = ChromaManager(channel=channel)
 
@@ -104,15 +108,14 @@ async def find_answer(message: types.Message, command: CommandObject):
     )
 
     query_prompt = QUERY_TEAMPLATE.format(context=context_text, question=query)
-
+    update_task.cancel()
     msg_text = "🙋🏼‍♂️ *Ваш вопрос:*\n" + query + "\n\n🔍 *Найденный ответ:*\n"
     await msg.edit_text(msg_text)
     response = ""
 
     async for stream_response in llm.astream(query_prompt):
-        if len(stream_response.content)!=0:
-            response += stream_response.content
-            msg_text += stream_response.content
+        response += stream_response.content
+        msg_text += stream_response.content
         if (len(msg_text.split()) % 7 == 0) and len(msg_text.split()) >= 7:
             await msg.edit_text(msg_text)
 
