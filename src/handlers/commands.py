@@ -167,10 +167,6 @@ async def add_channel(message: types.Message,  command: CommandObject):
     
     else:
         await send_channel_to_admins(user_id=user_id, channel=channel)
-        # await message.answer(
-        #     config.get(['messages', 'moderation', 'channel', 'processing'])
-        # )
-
         
 
 @router.message(UnknownCommandFilter())

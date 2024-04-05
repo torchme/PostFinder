@@ -15,7 +15,7 @@ async def send_user_to_admins(user_id: int, username: str, first_name: str, last
 async def send_channel_to_admins(user_id: int, channel: str):
     await bot.send_message(
         ADMIN_CHAT_ID,
-        f"Channel: {channel}\nДобавить в пул каналов?",
+        "Channel: {channel}\nДобавить в пул каналов?".format(channel=channel),
         reply_markup=inline_markup_admin_channel(channel=channel, user_id=user_id),
         parse_mode=None
     )   
