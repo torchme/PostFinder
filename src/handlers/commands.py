@@ -9,7 +9,7 @@ from loguru import logger
 from src.app.loader import llm, pg_manager, bot, encoding, extractor
 from src.database.chroma_service import ChromaManager
 from src.config import config
-from src.utils.validation import validate_parse_command_args
+from src.utils.validation import validate_parse_command_args, validate_add_channel_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup_feedback
 from src.utils.ui_helpers import update_loading_message
@@ -23,7 +23,6 @@ async def send_welcome(message: types.Message):
     Takes a message object as input.
     """
     welcome_message = config.get(['messages', 'welcome'])
-
     await message.answer(welcome_message)
 
     telegram_id = message.from_user.id
@@ -151,12 +150,13 @@ async def find_answer(message: types.Message, command: CommandObject):
 
 @router.message(Command(commands=["add_channel"]))
 async def add_channel(message: types.Message,  command: CommandObject):
+    user_id = message.from_user.id
     if message.from_user.id not in config.whitelist:
         await message.answer(config.get(['messages', 'moderation', 'channel', 'processing']))
         return
 
     args = command.args
-    channel, error_message = validate_parse_command_args(args)
+    channel, error_message = validate_add_channel_command_args(args)
     if error_message:
         await message.answer(error_message)
         return
@@ -166,7 +166,7 @@ async def add_channel(message: types.Message,  command: CommandObject):
         return
     
     else:
-        await send_channel_to_admins(channel=channel)
+        await send_channel_to_admins(user_id=user_id, channel=channel)
         # await message.answer(
         #     config.get(['messages', 'moderation', 'channel', 'processing'])
         # )

@@ -25,7 +25,7 @@ def validate_add_channel_command_args(args_str: Optional[str]):
             config.get(['messages', 'errors', 'parse_channel_error']),
         )
     args = args_str.split()
-    channel = args[0].replace("@", "")
+    channel = args[0]
     return channel, ""
 
 

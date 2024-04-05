@@ -35,18 +35,18 @@ def inline_markup_admin_user(user_id: int, username: str) -> InlineKeyboardMarku
     return InlineKeyboardMarkup(inline_keyboard=[buttons])
 
 
-def inline_markup_admin_channel(channel: str) -> InlineKeyboardMarkup:
+def inline_markup_admin_channel(user_id:int, channel: str, ) -> InlineKeyboardMarkup:
     buttons = [
         InlineKeyboardButton(
             text="✅",
             callback_data=AdminChannelCallback(
-                type="admin_channel", user_id=str(channel),action="approve"
+                type="admin_channel", channel=str(channel), user_id=str(user_id),action="approve"
             ).pack(),
         ),
         InlineKeyboardButton(
             text="❌",
             callback_data=AdminChannelCallback(
-                type="admin_channel", user_id=str(channel), action="dismiss"
+                type="admin_channel", channel=str(channel), user_id=str(user_id), action="dismiss"
             ).pack(),
         ),
     ]
