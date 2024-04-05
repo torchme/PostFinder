@@ -1,27 +1,29 @@
 import time
 
 from aiogram import Router, types
+from aiogram.enums.chat_action import ChatAction
 from aiogram.filters import Command, CommandObject
 from langchain.prompts import PromptTemplate
-
 from loguru import logger
+
 from src.app.loader import llm, pg_manager, bot, encoding, extractor
 from src.database.chroma_service import ChromaManager
 from src.config import config
 from src.utils.validation import validate_parse_command_args
 from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup_feedback
-from src.utils.ui_helpers import update_loading_message
 from src.utils.admin_service import send_to_admins
 
 router = Router()
+
+
 @router.message(Command(commands=["start", "help"]))
 async def send_welcome(message: types.Message):
     """
     Sends a welcome message to the user and registers the user in the system if not already registered.
     Takes a message object as input.
     """
-    welcome_message = config.get(['messages', 'welcome'])
+    welcome_message = config.get(["messages", "welcome"])
 
     await message.answer(welcome_message)
 
@@ -52,9 +54,7 @@ async def send_welcome(message: types.Message):
             first_name=first_name,
             last_name=last_name,
         )
-        await message.answer(
-            config.get(['messages', 'moderation_answer'])
-        )
+        await message.answer(config.get(["messages", "moderation_answer"]))
 
 
 @router.message(Command(commands="find"))
@@ -70,11 +70,12 @@ async def find_answer(message: types.Message, command: CommandObject):
             The command object containing arguments.
     """
     if message.from_user.id not in config.whitelist:
-        await message.answer(config.get(['messages', 'moderation']))
+        await message.answer(config.get(["messages", "moderation"]))
         return
 
     args = command.args
-    channel, query, _, error_message =validate_parse_command_args(args)
+
+    channel, query, _, error_message = validate_parse_command_args(args)
 
     if error_message:
         await message.answer(error_message)
@@ -82,9 +83,12 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     start_time = time.time()
 
-    msg = await message.answer(config.get(['messages', 'searching']))
+
+    msg = await message.answer(config.get(["messages", "searching"]))
 
     chroma_manager = ChromaManager(channel=channel)
+
+    await bot.send_chat_action(message.chat.id, ChatAction.TYPING)
 
     await chroma_manager.update_collection()
 
@@ -93,8 +97,13 @@ async def find_answer(message: types.Message, command: CommandObject):
         extractor.add_features(query=query), search_kwargs={"k": 5}
     )
 
-    context_text = "\n\n---\n\n".join([f'Text №{i}' + doc.page_content for i, doc in enumerate(docs)])
-    cut_length = [7 if len(doc.page_content.split()) > 7 else len(doc.page_content.split()) for doc in docs]
+    context_text = "\n\n---\n\n".join(
+        [f"Text №{i}" + doc.page_content for i, doc in enumerate(docs)]
+    )
+    cut_length = [
+        7 if len(doc.page_content.split()) > 7 else len(doc.page_content.split())
+        for doc in docs
+    ]
     relevant_post_urls = [
         f"[{' '.join(doc.page_content.split()[:(cut_length[i])])}...](t.me/{channel}/{doc.metadata['message_id']})"
         for i, doc in enumerate(docs)
@@ -102,31 +111,34 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     QUERY_TEAMPLATE = PromptTemplate(
         input_variables=["question", "context"],
-        template=config.get(['templates', 'prompt']),
+        template=config.get(["templates", "prompt"]),
     )
 
     query_prompt = QUERY_TEAMPLATE.format(context=context_text, question=query)
+
 
     msg_text = "🙋🏼‍♂️ *Ваш вопрос:*\n" + query + "\n\n🔍 *Найденный ответ:*\n"
     await msg.edit_text(msg_text)
     response = ""
 
     async for stream_response in llm.astream(query_prompt):
+
         if len(stream_response.content)!=0:
+
             response += stream_response.content
             msg_text += stream_response.content
         if (len(msg_text.split()) % 7 == 0) and len(msg_text.split()) >= 7:
             await msg.edit_text(msg_text)
 
     msg_text += "\n\n• " + "\n• ".join(relevant_post_urls)
-    msg_text += f'''\n\n{config.get(['messages', 'action_to_continue'])}'''
+    msg_text += f"""\n\n{config.get(['messages', 'action_to_continue'])}"""
     await msg.edit_text(
         msg_text,
         reply_markup=inline_markup_feedback(message_id=msg.message_id),
         disable_web_page_preview=True,
     )
-    
-    input_tokens = len(encoding.encode(query_prompt)) 
+
+    input_tokens = len(encoding.encode(query_prompt))
     output_tokens = len(encoding.encode(response))
     end_time = time.time()
     execution_time = int(end_time - start_time)
@@ -144,9 +156,11 @@ async def find_answer(message: types.Message, command: CommandObject):
         execution_time=execution_time,
     )
 
-    logger.info(config.get(['messages', 'action_processed']).format(message.from_user.id))
+    logger.info(
+        config.get(["messages", "action_processed"]).format(message.from_user.id)
+    )
 
 
 @router.message(UnknownCommandFilter())
 async def unknown_command(message: types.Message):
-    await message.answer(config.get(['messages', 'unknown']))
+    await message.answer(config.get(["messages", "unknown"]))
