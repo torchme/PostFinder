@@ -1,14 +1,26 @@
 callback:
   approve:
-    admins: |
-      ✅ Одобрено:\nusername: {username}\nuser_id: {user_id}\n\nЕсли захотите удалить пользователя, используйте /del_user [user_id] 
-    user: |
-      ✅ Спасибо за ожидание! Вам выдан доступ к боту
-    deny:
-      admins: |
-        ❌ Отказано:\nusername: {username}\nuser_id: {user_id}
-      user: |
-        ❌ К сожалению, Вам отказано в доступе к боту
+    user: 
+      to_admins: |
+        ✅ Одобрено:\nusername: {username}\nuser_id: {user_id}\n\nЕсли захотите удалить пользователя, используйте /del_user [user_id] 
+      to_user: |
+        ✅ Спасибо за ожидание! Вам выдан доступ к боту
+    channel: 
+      to_user:
+        ✅ Спасибо за ожидание! Канал {channel} был одобрен модерацией!
+      to_admins: |
+        ✅ Одобрено:\nchannel: {channel}\nЕсли захотите удалить канал, используйте /del_channel @[channel]
+  deny:
+      user:
+        to_admins: |
+          ❌ Отказано:\nusername: {username}\nuser_id: {user_id}
+        to_user: |
+          ❌ К сожалению, Вам отказано в доступе к боту
+      channel: 
+        to_user: |
+          ❌Канал {channel} был  отклонен модерацией
+        to_admins: |
+          ❌ Отказано:\nchannel: {channel}
 messages:
   welcome: |
     Привет! Я — *PostFinder*, инструмент, который изменит твое взаимодействие с социальными сетями.
@@ -43,7 +55,7 @@ messages:
       processing: |
         Предложенный Вами канал в статусе рассмотрения администрацией, пожалуйста, ожидайте.
       deny: |
-        Канал был {channel} отклонен модерацией
+        
     user: 
       processing: |
         Вы еще не прошли модерацию, пожалуйста, ожидайте
@@ -66,7 +78,11 @@ messages:
         User {} was successfully added!
       fail: |
         User {} is already in whitelist!
-
+  user: 
+    registered: |
+      User {} registered!
+    already_registered: |
+      User {} is already registered!
 
 
 templates:

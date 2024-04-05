@@ -42,9 +42,9 @@ async def send_welcome(message: types.Message):
             last_name=last_name,
             bio=bio,
         )
-        logger.info(f"User {telegram_id} registered!")
+        logger.info(config.get(['messages', 'user', 'registered']).format(telegram_id))
     else:
-        logger.info(f"User {telegram_id} is already registered!")
+        logger.info(config.get(['messages', 'user', 'already_registered']).format(telegram_id))
 
     if telegram_id not in config.whitelist:
         await send_user_to_admins(
@@ -150,7 +150,7 @@ async def find_answer(message: types.Message, command: CommandObject):
 
 
 @router.message(Command(commands=["add_channel"]))
-async def send_welcome(message: types.Message,  command: CommandObject):
+async def add_channel(message: types.Message,  command: CommandObject):
     if message.from_user.id not in config.whitelist:
         await message.answer(config.get(['messages', 'moderation', 'channel', 'processing']))
         return
@@ -166,7 +166,10 @@ async def send_welcome(message: types.Message,  command: CommandObject):
         return
     
     else:
-        await send_channel_to_admins(channel)
+        await send_channel_to_admins(channel=channel)
+        # await message.answer(
+        #     config.get(['messages', 'moderation', 'channel', 'processing'])
+        # )
 
         
 

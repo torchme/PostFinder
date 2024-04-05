@@ -2,7 +2,7 @@ from aiogram import F, Router, types
 
 from src.app.loader import pg_manager, bot
 from src.config import ADMIN_CHAT_ID, config
-from src.utils.schemas import FeedbackCallback, AdminCallback
+from src.utils.schemas import FeedbackCallback, AdminUserCallback, AdminChannelCallback
 
 router = Router()
 
@@ -27,9 +27,9 @@ async def get_feedback(
     await callback_query.answer(callback_data.feedback)
 
 
-@router.callback_query(AdminCallback.filter(F.type == "admin"))
-async def admin_action(
-    callback_query: types.CallbackQuery, callback_data: AdminCallback
+@router.callback_query(AdminUserCallback.filter(F.type == "admin_user"))
+async def admin_action_user(
+    callback_query: types.CallbackQuery, callback_data: AdminUserCallback
 ):
     user_id = int(callback_data.user_id)
     username = callback_data.username
@@ -39,19 +39,49 @@ async def admin_action(
 
         await bot.send_message(
             ADMIN_CHAT_ID,
-            config.get(['callback', 'approve', 'admins']).format(username=username, user_id=user_id),
+            config.get(['callback', 'approve', 'user','to_admins']).format(username=username, user_id=user_id),
             parse_mode=None,
         )
         await bot.send_message(
-            int(user_id), config.get(['callback', 'approve', 'user'])
+            int(user_id), config.get(['callback', 'approve','user', 'to_user'])
         )
     else:
         await bot.send_message(
             ADMIN_CHAT_ID,
-            config.get(['callback', 'deny', 'admins']).format(username=username, user_id=user_id),
+            config.get(['callback', 'deny', 'user', 'to_admins']).format(username=username, user_id=user_id),
 
             parse_mode=None,
         )
         await bot.send_message(
-            int(user_id), config.get(['callback', 'deny', 'user'])
+            int(user_id), config.get(['callback', 'deny', 'user', 'to_admins'])
+        )
+
+
+
+@router.callback_query(AdminChannelCallback.filter(F.type == "admin_channel"))
+async def admin_action_channel(
+    callback_query: types.CallbackQuery, callback_data: AdminChannelCallback
+):
+    user_id = int(callback_data.user_id)
+    channel = callback_data.channel
+
+    if callback_data.action == "approve":
+
+        await bot.send_message(
+            ADMIN_CHAT_ID,
+            config.get(['callback', 'approve', 'channel', 'to_admins']).format(channel=channel),
+            parse_mode=None,
+        )
+        await bot.send_message(
+            int(user_id), config.get(['callback', 'approve', 'channel', 'to_user']).format(channel=channel)
+        )
+    else:
+        await bot.send_message(
+            ADMIN_CHAT_ID,
+            config.get(['callback', 'deny', 'channel', 'to_admins']).format(channel=channel),
+
+            parse_mode=None,
+        )
+        await bot.send_message(
+            int(user_id), config.get(['callback', 'deny', 'channel', 'to_user']).format(channel=channel)
         )

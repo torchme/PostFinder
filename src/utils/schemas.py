@@ -7,8 +7,14 @@ class FeedbackCallback(CallbackData, prefix="feedback"):
     feedback: str
 
 
-class AdminCallback(CallbackData, prefix="admin"):
+class AdminUserCallback(CallbackData, prefix="user"):
     type: str
     user_id: str
     username: str
+    action: str
+
+class AdminChannelCallback(CallbackData, prefix="channel"):
+    type: str
+    user_id: str
+    channel: str
     action: str
