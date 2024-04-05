@@ -11,7 +11,7 @@ async def send_user_to_admins(user_id: int, username: str, first_name: str, last
             reply_markup=inline_markup_admin_user(user_id=user_id, username=username),
             parse_mode=None,
         )
-
+    
 async def send_channel_to_admins(user_id: int, channel: str):
     await bot.send_message(
         ADMIN_CHAT_ID,

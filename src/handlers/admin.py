@@ -32,3 +32,4 @@ async def del_user(message: types.Message, command: CommandObject):
         await message.answer(config.get(['messages', 'admin', 'remove', 'success']).format(user_id))
     else:
         await message.answer(config.get(['messages', 'admin', 'remove', 'fail']))
+

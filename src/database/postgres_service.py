@@ -1,6 +1,6 @@
 from sqlalchemy import insert, select, update
 from src.database import async_session_maker
-from src.database.models import User, Action
+from src.database.models import User, Action, User
 
 
 class PostgresManager:
@@ -158,3 +158,51 @@ class PostgresManager:
             previus_context = result.mappings().fetchone()
 
             return previus_context
+    
+    async def add_channel(self, channel: str, user_id: int):
+        """
+        Get the previous context from the database with the provided reply_to_message_id.
+
+        Parameters
+        ----------
+        reply_to_message_id : int
+            The reply_to_message_id of the action.
+
+        Returns
+        -------
+        previus_context
+        """
+        async with async_session_maker() as session:
+            stm = insert(Action).values(
+            channel=channel,
+            User_id=user_id
+            )
+
+            result = await session.execute(stm)
+            previus_context = result.mappings().fetchone()
+
+            return previus_context
+    
+    async def channel_exists(self, channel: str) -> bool:
+        """
+        Check if a user with the given telegram_id exists in the database.
+
+        Parameters
+        ----------
+        self : instance
+            The instance of the class.
+        telegram_id : int
+            The telegram_id of the user to check.
+
+        Returns
+        -------
+        bool
+            True if the user exists, False otherwise.
+        """
+        async with async_session_maker() as session:
+            query = select(Channels_pool).where(Channel.channel == channel)
+
+            result = await session.execute(query)
+            exists = result.mappings().fetchall()
+
+            return bool(exists)

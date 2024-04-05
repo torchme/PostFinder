@@ -50,3 +50,8 @@ class Action(Base):
     output_tokens = Column(Integer, nullable=True)
     execution_time = Column(Integer, nullable=True)
     feedback = Column(String, nullable=True)
+
+class ChannelsPool(Base):
+    __tablename__ = "channels_pool"
+    channel = Column(String, primary_key=True)
+    user_id = Column(Integer, nullable=True)

@@ -13,7 +13,7 @@ def inline_markup_feedback(message_id: int) -> InlineKeyboardMarkup:
         ),
     ]
 
-    return InlineKeyboardMarkup(inline_keyboard=[buttons])
+    return InlineKeyboardMarkup(inline_keyboard=[buttons], one_time_keyboard=True)
 
 
 def inline_markup_admin_user(user_id: int, username: str) -> InlineKeyboardMarkup:
@@ -32,7 +32,7 @@ def inline_markup_admin_user(user_id: int, username: str) -> InlineKeyboardMarku
         ),
     ]
 
-    return InlineKeyboardMarkup(inline_keyboard=[buttons])
+    return InlineKeyboardMarkup(inline_keyboard=[buttons], one_time_keyboard=True)
 
 
 def inline_markup_admin_channel(user_id:int, channel: str, ) -> InlineKeyboardMarkup:
@@ -51,4 +51,4 @@ def inline_markup_admin_channel(user_id:int, channel: str, ) -> InlineKeyboardMa
         ),
     ]
 
-    return InlineKeyboardMarkup(inline_keyboard=[buttons])
+    return InlineKeyboardMarkup(inline_keyboard=[buttons], one_time_keyboard=True)

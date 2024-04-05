@@ -66,6 +66,10 @@ async def admin_action_channel(
     channel = callback_data.channel
 
     if callback_data.action == "approve":
+        await pg_manager.add_channel(
+        channel=channel,
+        user_id=user_id
+        )
 
         await bot.send_message(
             ADMIN_CHAT_ID,
