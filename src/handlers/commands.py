@@ -82,7 +82,7 @@ async def find_answer(message: types.Message, command: CommandObject):
 
     start_time = time.time()
 
-    msg = await message.answer("👀 Ищем ответы...")
+    msg = await message.answer(config.get(['messages', 'searching']))
 
     chroma_manager = ChromaManager(channel=channel)
 
