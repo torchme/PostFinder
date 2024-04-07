@@ -2,7 +2,7 @@ from typing import List, Optional, Tuple
 from aiogram import types
 from aiogram.filters import CommandObject
 from src.config import config
-
+from src.app.loader import bot
 def validate_parse_command_args(args_str: Optional[str]):
     if not args_str:
         return (
@@ -18,7 +18,7 @@ def validate_parse_command_args(args_str: Optional[str]):
 
     return channel, context, limit, ""
 
-def validate_add_channel_command_args(args_str: Optional[str]):
+async def validate_add_channel_command_args(args_str: Optional[str]):
     if not args_str:
         return (
             None,
@@ -26,8 +26,13 @@ def validate_add_channel_command_args(args_str: Optional[str]):
         )
     args = args_str.split()
     channel = args[0]
+    
+    try:
+        await bot.get_chat(channel)
+    except Exception as e:
+        return None, "Channel not found"
+    
     return channel, ""
-
 
 def validate_id(
     message: types.Message, command: CommandObject, admin_ids: List[int]

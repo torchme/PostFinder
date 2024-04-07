@@ -36,7 +36,6 @@ async def admin_action_user(
 
     if callback_data.action == "approve":
         config.add_id(id_type="users", user_id=user_id)
-
         await bot.send_message(
             ADMIN_CHAT_ID,
             config.get(['callback', 'approve', 'user','to_admins']).format(username=username, user_id=user_id),
@@ -45,6 +44,8 @@ async def admin_action_user(
         await bot.send_message(
             int(user_id), config.get(['callback', 'approve','user', 'to_user'])
         )
+        
+        await pg_manager.add_user(telegram_id=user_id, username=username)
     else:
         await bot.send_message(
             ADMIN_CHAT_ID,
@@ -79,6 +80,7 @@ async def admin_action_channel(
         await bot.send_message(
             int(user_id), config.get(['callback', 'approve', 'channel', 'to_user']).format(channel=channel)
         )
+        
     else:
         await bot.send_message(
             ADMIN_CHAT_ID,

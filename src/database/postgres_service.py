@@ -1,6 +1,6 @@
-from sqlalchemy import insert, select, update
+from sqlalchemy import insert, select, update, delete
 from src.database import async_session_maker
-from src.database.models import User, Action, User
+from src.database.models import User, Action, User, ChannelsPool
 
 
 class PostgresManager:
@@ -32,6 +32,12 @@ class PostgresManager:
                 bio=bio,
             )
 
+            await session.execute(stm)
+            await session.commit()
+    
+    async def del_user(self, telegram_id: int) -> None:
+        async with async_session_maker() as session:
+            stm = delete(User).where(User.telegram_id==telegram_id)
             await session.execute(stm)
             await session.commit()
 
@@ -159,7 +165,7 @@ class PostgresManager:
 
             return previus_context
     
-    async def add_channel(self, channel: str, user_id: int):
+    async def add_channel(self, channel: str, user_id: int) -> None:
         """
         Get the previous context from the database with the provided reply_to_message_id.
 
@@ -173,15 +179,23 @@ class PostgresManager:
         previus_context
         """
         async with async_session_maker() as session:
-            stm = insert(Action).values(
+            stm = insert(ChannelsPool).values(
             channel=channel,
-            User_id=user_id
+            user_id=user_id
             )
 
-            result = await session.execute(stm)
-            previus_context = result.mappings().fetchone()
-
-            return previus_context
+            await session.execute(stm)
+            await session.commit()
+            return True
+    
+    async def del_channel(self, channel:str):
+        
+        async with async_session_maker() as session:
+            stm = delete(ChannelsPool).where(ChannelsPool.channel==channel)
+            await session.execute(stm)
+            await session.commit()
+        
+        return True
     
     async def channel_exists(self, channel: str) -> bool:
         """
@@ -200,7 +214,7 @@ class PostgresManager:
             True if the user exists, False otherwise.
         """
         async with async_session_maker() as session:
-            query = select(Channels_pool).where(Channel.channel == channel)
+            query = select(ChannelsPool).where(ChannelsPool.channel == channel)
 
             result = await session.execute(query)
             exists = result.mappings().fetchall()

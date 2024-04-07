@@ -15,6 +15,7 @@ from src.utils.markup import inline_markup_feedback
 from src.utils.ui_helpers import update_loading_message
 from src.utils.admin_service import send_user_to_admins, send_channel_to_admins
 from src.utils.antifrod import validate_channel
+from src.config import ADMIN_CHAT_ID
 router = Router()
 @router.message(Command(commands=["start", "help"]))
 async def send_welcome(message: types.Message):
@@ -150,24 +151,27 @@ async def find_answer(message: types.Message, command: CommandObject):
 
 @router.message(Command(commands=["add_channel"]))
 async def add_channel(message: types.Message,  command: CommandObject):
-    user_id = message.from_user.id
-    if message.from_user.id not in config.whitelist:
-        await message.answer(config.get(['messages', 'moderation', 'channel', 'processing']))
-        return
-
     args = command.args
-    channel, error_message = validate_add_channel_command_args(args)
+    channel, error_message = await validate_add_channel_command_args(args)
+
     if error_message:
         await message.answer(error_message)
         return
+    user_id, chat_id = message.from_user.id, message.chat.id
     
-    elif not await validate_channel(channel):
-        await message.answer(config.get(['messages', 'moderation','channel', 'deny']).format(channel=channel))
+    if message.chat.id == ADMIN_CHAT_ID:
+        pg_manager.add_channel(channel=channel, user_id=1)
+        return
+    elif message.from_user.id not in config.whitelist:
+        await message.answer(config.get(['messages', 'moderation', 'channel', 'processing']))
         return
     
+    await bot.send_message(chat_id=user_id, text=config.get(['messages', 'moderation', 'channel', 'processing']))
+    if not await validate_channel(channel):
+        await message.answer(config.get(['messages', 'moderation','user', 'deny']).format(channel=channel))
+        return
     else:
-        await send_channel_to_admins(user_id=user_id, channel=channel)
-
+        await send_channel_to_admins(user_id=user_id, channel=channel)   
 
 @router.message(UnknownCommandFilter())
 async def unknown_command(message: types.Message):

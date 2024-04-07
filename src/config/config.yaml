@@ -40,7 +40,7 @@ messages:
     parse_channel_error: |
       Аргументы не были переданы.\n
     no_rights: |
-      Error: You don't have rights for this.\n\nContact @redpf for rights
+      Error: Acces denied! You don't have rights for this.
     unknown_message_error: |
       🚫 Я не распознал ваш запрос.
 
@@ -68,16 +68,28 @@ messages:
   unknown: |
     Упс... Похоже я не знаю такой команды 😬
   admin:
-    remove:
-      success: |
-        User {} was removed
-      fail: |
-        User ID not found in the whitelist.
-    add:
-      success: |
-        User {} was successfully added!
-      fail: |
-        User {} is already in whitelist!
+    users:
+      remove:
+        success: |
+          User {} was removed
+        fail: |
+          User ID not found in the whitelist.
+      add:
+        success: |
+          User {} was successfully added!
+        fail: |
+          User {} is already in whitelist!
+    channel:
+      remove:
+        success: |
+          Channel {} was removed
+        fail: |
+          Channel isn't in pool
+      add:
+        success: |
+          Channel {} was successfully added!
+        fail: | 
+          Channel {} is already in pool!
   user: 
     registered: |
       User {} registered!
