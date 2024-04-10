@@ -17,4 +17,5 @@ class AdminChannelCallback(CallbackData, prefix="channel"):
     type: str
     user_id: str
     channel: str
+    username: str
     action: str

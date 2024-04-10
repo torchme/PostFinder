@@ -65,29 +65,32 @@ async def admin_action_channel(
 ):
     user_id = int(callback_data.user_id)
     channel = callback_data.channel
-
+    username = callback_data.username
+    chat_info=await bot.get_chat(channel)
     if callback_data.action == "approve":
         await pg_manager.add_channel(
         channel=channel,
-        user_id=user_id
+        user_id=user_id,
+        username=username,
+        members_count=await chat_info.get_member_count()
         )
 
         await bot.send_message(
             ADMIN_CHAT_ID,
-            config.get(['callback', 'approve', 'channel', 'to_admins']).format(channel=channel),
+            config.get(['callback', 'approve', 'channel', 'to_admins']).format(channel),
             parse_mode=None,
         )
         await bot.send_message(
-            int(user_id), config.get(['callback', 'approve', 'channel', 'to_user']).format(channel=channel)
+            int(user_id), config.get(['callback', 'approve', 'channel', 'to_user']).format(channel)
         )
         
     else:
         await bot.send_message(
             ADMIN_CHAT_ID,
-            config.get(['callback', 'deny', 'channel', 'to_admins']).format(channel=channel),
+            config.get(['callback', 'deny', 'channel', 'to_admins']).format(channel),
 
             parse_mode=None,
         )
         await bot.send_message(
-            int(user_id), config.get(['callback', 'deny', 'channel', 'to_user']).format(channel=channel)
+            int(user_id), config.get(['callback', 'deny', 'channel', 'to_user']).format(channel)
         )

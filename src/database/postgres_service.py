@@ -1,9 +1,11 @@
+import datetime
 from sqlalchemy import insert, select, update, delete
 from src.database import async_session_maker
 from src.database.models import User, Action, User, ChannelsPool
 
 
 class PostgresManager:
+    
     async def add_user(
         self, telegram_id: int, username: str, first_name: str, last_name: str, bio: str
     ) -> None:
@@ -29,7 +31,7 @@ class PostgresManager:
                 username=username,
                 first_name=first_name,
                 last_name=last_name,
-                bio=bio,
+                bio=bio
             )
 
             await session.execute(stm)
@@ -165,23 +167,21 @@ class PostgresManager:
 
             return previus_context
     
-    async def add_channel(self, channel: str, user_id: int) -> None:
+    async def add_channel(self, channel: str, user_id: int, members_count:int, username:str) -> None:
         """
-        Get the previous context from the database with the provided reply_to_message_id.
+        Add channel to pool.
 
         Parameters
         ----------
-        reply_to_message_id : int
-            The reply_to_message_id of the action.
-
-        Returns
-        -------
-        previus_context
+        channel:
+            Channel to add.
         """
         async with async_session_maker() as session:
             stm = insert(ChannelsPool).values(
             channel=channel,
-            user_id=user_id
+            user_id=user_id,
+            username=username,
+            members_count=members_count
             )
 
             await session.execute(stm)
@@ -205,8 +205,8 @@ class PostgresManager:
         ----------
         self : instance
             The instance of the class.
-        telegram_id : int
-            The telegram_id of the user to check.
+        channel : str
+            Channel to check.
 
         Returns
         -------
@@ -220,3 +220,27 @@ class PostgresManager:
             exists = result.mappings().fetchall()
 
             return bool(exists)
+
+    async def show_pool(self) -> bool:
+        """
+        Check if a user with the given telegram_id exists in the database.
+
+        Parameters
+        ----------
+        self : instance
+            The instance of the class.
+        channel : str
+            Channel to check.
+
+        Returns
+        -------
+        bool
+            True if the user exists, False otherwise.
+        """
+        async with async_session_maker() as session:
+            query = select(ChannelsPool.channel, ChannelsPool.username)
+
+            result = await session.execute(query)
+            result = result.all()
+            return result
+    

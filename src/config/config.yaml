@@ -2,14 +2,17 @@ callback:
   approve:
     user: 
       to_admins: |
-        ✅ Одобрено:\nusername: {username}\nuser_id: {user_id}\n\nЕсли захотите удалить пользователя, используйте /del_user [user_id] 
+        ✅ Одобрено:
+        username: {username}
+        user_id: {user_id}
+        Если захотите удалить пользователя, используйте /del_user [user_id] 
       to_user: |
         ✅ Спасибо за ожидание! Вам выдан доступ к боту
     channel: 
-      to_user:
-        ✅ Спасибо за ожидание! Канал {channel} был одобрен модерацией!
+      to_user: |
+        ✅ Спасибо за ожидание! Канал {} был одобрен модерацией!
       to_admins: |
-        ✅ Одобрено:\nchannel: {channel}\nЕсли захотите удалить канал, используйте /del_channel @[channel]
+        ✅Канал {} был добавлен в пул каналов.
   deny:
       user:
         to_admins: |
@@ -84,7 +87,7 @@ messages:
         success: |
           Channel {} was removed
         fail: |
-          Channel isn't in pool
+          Channel {} isn't in pool
       add:
         success: |
           Channel {} was successfully added!

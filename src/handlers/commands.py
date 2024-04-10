@@ -157,21 +157,29 @@ async def add_channel(message: types.Message,  command: CommandObject):
     if error_message:
         await message.answer(error_message)
         return
+    chat_info = await bot.get_chat(channel)
     user_id, chat_id = message.from_user.id, message.chat.id
-    
-    if message.chat.id == ADMIN_CHAT_ID:
-        pg_manager.add_channel(channel=channel, user_id=1)
+    username = message.from_user.username
+
+    if message.from_user.id not in config.whitelist:
+        await message.answer(
+            config.get(['messages', 'moderation', 'channel', 'processing'])
+            )
         return
-    elif message.from_user.id not in config.whitelist:
-        await message.answer(config.get(['messages', 'moderation', 'channel', 'processing']))
+    elif await pg_manager.channel_exists(channel=channel):
+        await message.answer(
+            config.get(['messages', 'admin', 'channel', 'add', 'fail']).format(channel)
+            )
+        return
+    elif chat_id == int(ADMIN_CHAT_ID):
+        await pg_manager.add_channel(channel=channel, user_id=message.from_user.id, members_count=await chat_info.get_member_count(), username=username)
+        await message.answer(
+            config.get(['callback', 'approve', 'channel', 'to_admins']).format(channel)
+            )
         return
     
     await bot.send_message(chat_id=user_id, text=config.get(['messages', 'moderation', 'channel', 'processing']))
-    if not await validate_channel(channel):
-        await message.answer(config.get(['messages', 'moderation','user', 'deny']).format(channel=channel))
-        return
-    else:
-        await send_channel_to_admins(user_id=user_id, channel=channel)   
+    await send_channel_to_admins(user_id=user_id, channel=channel, username=username)   
 
 @router.message(UnknownCommandFilter())
 async def unknown_command(message: types.Message):

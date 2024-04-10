@@ -44,9 +44,6 @@ class PostFinderBot:
             ),
             BotCommand(command="/account", description="🛒 Plan"),
             BotCommand(command='/add_channel', description="Request to add channel to our channel pool"),
-            BotCommand(command='/del_channel', description="Delete channel"),
-            BotCommand(command='/add_user', description="Add user"),
-            BotCommand(command='/del_user', description="Delete user")
         ]
         await bot.set_my_commands(bot_commands)
 
