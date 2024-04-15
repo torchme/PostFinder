@@ -1,5 +1,4 @@
 from src.app.loader import bot
-import aiogram
 
 async def validate_channel(channel:str):
     chat_info = await bot.get_chat(channel)

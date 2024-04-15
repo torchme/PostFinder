@@ -14,7 +14,6 @@ from src.utils.filters import UnknownCommandFilter
 from src.utils.markup import inline_markup_feedback
 from src.utils.ui_helpers import update_loading_message
 from src.utils.admin_service import send_user_to_admins, send_channel_to_admins
-from src.utils.antifrod import validate_channel
 from src.config import ADMIN_CHAT_ID
 router = Router()
 @router.message(Command(commands=["start", "help"]))

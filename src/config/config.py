@@ -29,7 +29,7 @@ DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_PASS = os.getenv("DB_PASS")
 
-ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", -1002036470708)
+ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
 
 CONFIG_PATH = "src/config/config.yaml"
 

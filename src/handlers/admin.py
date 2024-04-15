@@ -34,7 +34,7 @@ async def del_user(message: types.Message, command: CommandObject):
         await message.answer(error_msg)
         return
 
-    if not user_id in config.admin_ids:
+    if user_id not in config.admin_ids:
         await message.answer(config.get(['messages', 'errors', 'no_rights']))
         return
  
@@ -54,7 +54,7 @@ async def del_channel(message: types.Message, command: CommandObject):
         await message.answer(error_msg)
         return
     
-    if not user_id in config.admin_ids:
+    if user_id not in config.admin_ids:
         await message.answer(config.get(['messages', 'errors', 'no_rights']))
         return
     

@@ -29,7 +29,7 @@ async def validate_add_channel_command_args(args_str: Optional[str]):
     
     try:
         await bot.get_chat(channel)
-    except Exception as e:
+    except Exception:
         return None, "Channel not found"
     
     return channel, ""
