@@ -1,6 +1,6 @@
 from sqlalchemy import insert, select, update, delete
 from src.database import async_session_maker
-from src.database.models import User, Action, User, ChannelsPool
+from src.database.models import User, Action, ChannelsPool
 
 
 class PostgresManager:
