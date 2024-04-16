@@ -256,6 +256,7 @@
 ## 6. Благодарности
 - **[Karpov Courses](https://karpov.courses/simulator-ml)**
 - **[Reliable ML](https://t.me/reliable_ml/196)**
+- **[AI Tallent Hub](https://ai.itmo.ru/)**
 
 ## 7. Допольнительные документы
 - **[Превратите свой пет-проект из хобби в карьеру](https://habr.com/ru/articles/801549/)
