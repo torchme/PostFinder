@@ -229,7 +229,6 @@ class PostgresManager:
         self : instance
             The instance of the class.
 
-
         Returns
         -------
         tuple[str, str, int]
