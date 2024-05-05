@@ -54,7 +54,7 @@ class Action(Base):
 class ChannelsPool(Base):
     __tablename__ = "channels_pool"
     channel = Column(String, primary_key=True)
-    user_id = Column(Integer, nullable=True)
+    requested_by_id = Column(Integer, nullable=True)
     username= Column(String, nullable=True)
     added_date = Column(TIMESTAMP, default=datetime.utcnow)
-    members_count = Column(Integer, nullable=True)
+    channel_members_count = Column(Integer, nullable=True)

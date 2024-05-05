@@ -69,7 +69,7 @@ async def del_channel(message: types.Message, command: CommandObject):
 async def show_pool(message: types.Message, command: CommandObject):
     text = ''
     result = await pg_manager.show_pool()
-    for i, (channel, username) in enumerate(result):
-        text+= f'{i+1}. {channel} добавил @{username}\n'
+    for i, (channel, username, members) in enumerate(result):
+        text+= f'{i+1}. {channel}[{members} подписчиков] добавил @{username}\n'
     await message.answer(text)
     

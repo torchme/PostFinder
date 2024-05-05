@@ -43,7 +43,7 @@ class PostFinderBot:
                 description="🔍 Find response. Params: channel (str), query (str)",
             ),
             BotCommand(command="/account", description="🛒 Plan"),
-            BotCommand(command='/add_channel', description="Request to add channel to our channel pool"),
+            BotCommand(command='/add_channel', description="Request to add channel"),
         ]
         await bot.set_my_commands(bot_commands)
 

@@ -178,9 +178,9 @@ class PostgresManager:
         async with async_session_maker() as session:
             stm = insert(ChannelsPool).values(
             channel=channel,
-            user_id=user_id,
+            requested_by_id=user_id,
             username=username,
-            members_count=members_count
+            channel_members_count=members_count
             )
 
             await session.execute(stm)
@@ -220,24 +220,23 @@ class PostgresManager:
 
             return bool(exists)
 
-    async def show_pool(self) -> bool:
+    async def show_pool(self) -> tuple[str, str]:
         """
-        Check if a user with the given telegram_id exists in the database.
+        Return the pool of channels.
 
         Parameters
         ----------
         self : instance
             The instance of the class.
-        channel : str
-            Channel to check.
+
 
         Returns
         -------
-        bool
-            True if the user exists, False otherwise.
+        tuple[str, str]
+            (channel:str, username:str)
         """
         async with async_session_maker() as session:
-            query = select(ChannelsPool.channel, ChannelsPool.username)
+            query = select(ChannelsPool.channel, ChannelsPool.username, ChannelsPool.channel_members_count )
 
             result = await session.execute(query)
             result = result.all()
