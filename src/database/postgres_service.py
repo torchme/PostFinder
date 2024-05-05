@@ -220,7 +220,7 @@ class PostgresManager:
 
             return bool(exists)
 
-    async def get_pool(self) -> tuple[str, str]:
+    async def get_pool(self) -> tuple[str, str, str]:
         """
         Return the pool of channels.
 
