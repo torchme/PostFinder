@@ -1,6 +1,6 @@
 from sqlalchemy import insert, select, update, delete
 from src.database import async_session_maker
-from src.database.models import User, Action, Channels
+from src.database.models import User, Action, Channel
 
 
 class PostgresManager:
@@ -177,7 +177,7 @@ class PostgresManager:
             Channel to add.
         """
         async with async_session_maker() as session:
-            stm = insert(Channels).values(
+            stm = insert(Channel).values(
                 channel=channel,
                 requested_by_id=user_id,
                 username=username,
@@ -190,7 +190,7 @@ class PostgresManager:
 
     async def del_channel(self, channel: str):
         async with async_session_maker() as session:
-            stm = delete(Channels).where(Channels.channel == channel)
+            stm = delete(Channel).where(Channel.channel == channel)
             await session.execute(stm)
             await session.commit()
 
@@ -213,7 +213,7 @@ class PostgresManager:
             True if the user exists, False otherwise.
         """
         async with async_session_maker() as session:
-            query = select(Channels).where(Channels.channel == channel)
+            query = select(Channel.channel).where(Channel.channel == channel)
 
             result = await session.execute(query)
             exists = result.mappings().fetchall()
@@ -235,7 +235,9 @@ class PostgresManager:
             (channel:str, username:str, followers:int)
         """
         async with async_session_maker() as session:
-            query = select(Channels.channel, Channels.username, Channels.followers)
+            query = select(
+                Channel.channel, Channel.username, Channel.followers
+            ).order_by()
 
             result = await session.execute(query)
             result = result.all()

@@ -52,10 +52,10 @@ class Action(Base):
     feedback = Column(String, nullable=True)
 
 
-class Channels(Base):
-    __tablename__ = "channels"
+class Channel(Base):
+    __tablename__ = "channel"
     channel = Column(String, primary_key=True)
     requested_by_id = Column(Integer, nullable=True)
     username = Column(String, nullable=True)
     added_date = Column(TIMESTAMP, default=datetime.utcnow)
-    channel_members_count = Column(Integer, nullable=True)
+    followers = Column(Integer, nullable=True)
