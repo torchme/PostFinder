@@ -10,7 +10,7 @@ router = Router()
 @router.message(Command(commands="add_user"))
 async def add_user(message: types.Message, command: CommandObject):
     user_id, error_msg = validate_id(message, command, config.admin_ids)
-    telegram_id = message.from_user.id 
+    telegram_id = message.from_user.id
     username = message.from_user.username or ""
     first_name = message.from_user.first_name or ""
     last_name = message.from_user.last_name or ""
@@ -21,11 +21,22 @@ async def add_user(message: types.Message, command: CommandObject):
         return
 
     if await pg_manager.user_exists(telegram_id=user_id):
-        await message.answer(config.get(['messages', 'admin', 'users', 'add', 'fail']).format(user_id))
+        await message.answer(
+            config.get(["messages", "admin", "users", "add", "fail"]).format(user_id)
+        )
         return
-    await pg_manager.add_user(telegram_id=telegram_id,username=username, first_name=first_name, last_name=last_name, bio=bio)
-    await message.answer(config.get(['messages', 'admin', 'users', 'add', 'success']).format(user_id))
-    
+    await pg_manager.add_user(
+        telegram_id=telegram_id,
+        username=username,
+        first_name=first_name,
+        last_name=last_name,
+        bio=bio,
+    )
+    await message.answer(
+        config.get(["messages", "admin", "users", "add", "success"]).format(user_id)
+    )
+
+
 @router.message(Command(commands="del_user"))
 async def del_user(message: types.Message, command: CommandObject):
     user_id, error_msg = validate_id(message, command, config.admin_ids)
@@ -35,16 +46,20 @@ async def del_user(message: types.Message, command: CommandObject):
         return
 
     if user_id not in config.admin_ids:
-        await message.answer(config.get(['messages', 'errors', 'no_rights']))
+        await message.answer(config.get(["messages", "errors", "no_rights"]))
         return
- 
+
     if not await pg_manager.user_exists(telegram_id=message.from_user.id):
-        await message.answer(config.get(['messages', 'admin', 'users', 'remove', 'fail']).format(user_id))
+        await message.answer(
+            config.get(["messages", "admin", "users", "remove", "fail"]).format(user_id)
+        )
         return
     await pg_manager.del_user(telegram_id=message.from_user.id)
-    await message.answer(config.get(['messages', 'admin', 'users', 'remove', 'success']).format(user_id))
-    
-    
+    await message.answer(
+        config.get(["messages", "admin", "users", "remove", "success"]).format(user_id)
+    )
+
+
 @router.message(Command(commands="del_channel"))
 async def del_channel(message: types.Message, command: CommandObject):
     args = command.args
@@ -53,23 +68,30 @@ async def del_channel(message: types.Message, command: CommandObject):
     if error_msg:
         await message.answer(error_msg)
         return
-    
+
     if user_id not in config.admin_ids:
-        await message.answer(config.get(['messages', 'errors', 'no_rights']))
+        await message.answer(config.get(["messages", "errors", "no_rights"]))
         return
-    
+
     if not await pg_manager.channel_exists(channel=channel):
-        await message.answer(config.get(['messages', 'admin', 'channel', 'remove', 'fail']).format(channel))
+        await message.answer(
+            config.get(["messages", "admin", "channel", "remove", "fail"]).format(
+                channel
+            )
+        )
         return
     elif await pg_manager.del_channel(channel):
-        await message.answer(config.get(['messages', 'admin', 'channel', 'remove', 'success']).format(channel))
+        await message.answer(
+            config.get(["messages", "admin", "channel", "remove", "success"]).format(
+                channel
+            )
+        )
 
 
 @router.message(Command(commands="show_pool"))
 async def show_pool(message: types.Message, command: CommandObject):
-    text = ''
-    result = await pg_manager.show_pool()
+    text = ""
+    result = await pg_manager.get_pool()
     for i, (channel, username, members) in enumerate(result):
-        text+= f'{i+1}. {channel}[{members} подписчиков] добавил @{username}\n'
+        text += f"{i+1}. {channel}[{members} подписчиков] добавил @{username}\n"
     await message.answer(text)
-    

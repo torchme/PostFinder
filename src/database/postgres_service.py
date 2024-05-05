@@ -1,10 +1,9 @@
 from sqlalchemy import insert, select, update, delete
 from src.database import async_session_maker
-from src.database.models import User, Action, ChannelsPool
+from src.database.models import User, Action, Channels
 
 
 class PostgresManager:
-    
     async def add_user(
         self, telegram_id: int, username: str, first_name: str, last_name: str, bio: str
     ) -> None:
@@ -30,15 +29,15 @@ class PostgresManager:
                 username=username,
                 first_name=first_name,
                 last_name=last_name,
-                bio=bio
+                bio=bio,
             )
 
             await session.execute(stm)
             await session.commit()
-    
+
     async def del_user(self, telegram_id: int) -> None:
         async with async_session_maker() as session:
-            stm = delete(User).where(User.telegram_id==telegram_id)
+            stm = delete(User).where(User.telegram_id == telegram_id)
             await session.execute(stm)
             await session.commit()
 
@@ -165,8 +164,10 @@ class PostgresManager:
             previus_context = result.mappings().fetchone()
 
             return previus_context
-    
-    async def add_channel(self, channel: str, user_id: int, members_count:int, username:str) -> None:
+
+    async def add_channel(
+        self, channel: str, user_id: int, members_count: int, username: str
+    ) -> None:
         """
         Add channel to pool.
 
@@ -176,26 +177,25 @@ class PostgresManager:
             Channel to add.
         """
         async with async_session_maker() as session:
-            stm = insert(ChannelsPool).values(
-            channel=channel,
-            requested_by_id=user_id,
-            username=username,
-            channel_members_count=members_count
+            stm = insert(Channels).values(
+                channel=channel,
+                requested_by_id=user_id,
+                username=username,
+                followers_count=members_count,
             )
 
             await session.execute(stm)
             await session.commit()
             return True
-    
-    async def del_channel(self, channel:str):
-        
+
+    async def del_channel(self, channel: str):
         async with async_session_maker() as session:
-            stm = delete(ChannelsPool).where(ChannelsPool.channel==channel)
+            stm = delete(Channels).where(Channels.channel == channel)
             await session.execute(stm)
             await session.commit()
-        
+
         return True
-    
+
     async def channel_exists(self, channel: str) -> bool:
         """
         Check if a user with the given telegram_id exists in the database.
@@ -213,14 +213,14 @@ class PostgresManager:
             True if the user exists, False otherwise.
         """
         async with async_session_maker() as session:
-            query = select(ChannelsPool).where(ChannelsPool.channel == channel)
+            query = select(Channels).where(Channels.channel == channel)
 
             result = await session.execute(query)
             exists = result.mappings().fetchall()
 
             return bool(exists)
 
-    async def show_pool(self) -> tuple[str, str]:
+    async def get_pool(self) -> tuple[str, str]:
         """
         Return the pool of channels.
 
@@ -232,13 +232,12 @@ class PostgresManager:
 
         Returns
         -------
-        tuple[str, str]
-            (channel:str, username:str)
+        tuple[str, str, int]
+            (channel:str, username:str, followers:int)
         """
         async with async_session_maker() as session:
-            query = select(ChannelsPool.channel, ChannelsPool.username, ChannelsPool.channel_members_count )
+            query = select(Channels.channel, Channels.username, Channels.followers)
 
             result = await session.execute(query)
             result = result.all()
             return result
-    

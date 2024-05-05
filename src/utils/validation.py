@@ -3,13 +3,15 @@ from aiogram import types
 from aiogram.filters import CommandObject
 from src.config import config
 from src.app.loader import bot
+
+
 def validate_parse_command_args(args_str: Optional[str]):
     if not args_str:
         return (
             None,
             None,
             None,
-            config.get(['messages', 'parse_error']),
+            config.get(["messages", "parse_error"]),
         )
     args = args_str.split()
     channel = args[0].replace("@", "")
@@ -18,21 +20,23 @@ def validate_parse_command_args(args_str: Optional[str]):
 
     return channel, context, limit, ""
 
+
 async def validate_add_channel_command_args(args_str: Optional[str]):
     if not args_str:
         return (
             None,
-            config.get(['messages', 'errors', 'parse_channel_error']),
+            config.get(["messages", "errors", "parse_channel_error"]),
         )
     args = args_str.split()
     channel = args[0]
-    
+
     try:
         await bot.get_chat(channel)
     except Exception:
         return None, "Channel not found"
-    
+
     return channel, ""
+
 
 def validate_id(
     message: types.Message, command: CommandObject, admin_ids: List[int]

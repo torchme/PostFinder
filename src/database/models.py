@@ -51,10 +51,11 @@ class Action(Base):
     execution_time = Column(Integer, nullable=True)
     feedback = Column(String, nullable=True)
 
-class ChannelsPool(Base):
-    __tablename__ = "channels_pool"
+
+class Channels(Base):
+    __tablename__ = "channels"
     channel = Column(String, primary_key=True)
     requested_by_id = Column(Integer, nullable=True)
-    username= Column(String, nullable=True)
+    username = Column(String, nullable=True)
     added_date = Column(TIMESTAMP, default=datetime.utcnow)
     channel_members_count = Column(Integer, nullable=True)
