@@ -181,7 +181,7 @@ class PostgresManager:
                 channel=channel,
                 requested_by_id=user_id,
                 username=username,
-                followers_count=members_count,
+                followers=members_count,
             )
 
             await session.execute(stm)

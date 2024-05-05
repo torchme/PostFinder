@@ -88,10 +88,13 @@ async def del_channel(message: types.Message, command: CommandObject):
         )
 
 
-@router.message(Command(commands="show_pool"))
+@router.message(Command(commands="pool"))
 async def show_pool(message: types.Message, command: CommandObject):
     text = ""
     result = await pg_manager.get_pool()
-    for i, (channel, username, members) in enumerate(result):
-        text += f"{i+1}. {channel}[{members} подписчиков] добавил @{username}\n"
+    if result:
+        for i, (channel, username, members) in enumerate(result):
+            text += f"{i+1}. {channel} [{members} подписчиков] добавил @{username}\n"
+    else:
+        text = "Пул каналов пуст"
     await message.answer(text)
