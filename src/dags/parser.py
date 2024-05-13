@@ -17,14 +17,14 @@ async def scrape_channels():
         results = []
         for channel in CHANNELS_TO_SCRAPE:
             logger.info(f"Starting scrape for {channel}")
-            result = await scrape_telegram_messages(client, channel, limit=10)
+            result = await scrape_telegram_messages(client, channel)
             results.append(result)
             logger.info(f"Completed scrape for {channel}")
         return results
 
 
 @flow
-async def daily_channel_scrape():
+async def daily_scraper():
     """Initiates a daily task to scrape messages from Telegram channels"""
     logger.info("Starting the scraping process...")
     results = await scrape_channels()
@@ -33,6 +33,6 @@ async def daily_channel_scrape():
 
 
 if __name__ == "__main__":
-    daily_channel_scrape.serve(
-        name="Daily Channel Scrape", tags=["scraping", "daily"], cron="0 0 * * *"
+    daily_scraper.serve(
+        name="Daily Channel Scraper", tags=["scraping", "daily"], cron="0 0 * * *"
     )
