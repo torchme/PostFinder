@@ -16,6 +16,7 @@ services:
       dockerfile: docker/Dockerfile
     depends_on:
       - postgres_db
+      - prefect_flow
     environment:
       - ENV_STATE=docker
     env_file:
@@ -32,3 +33,23 @@ services:
     env_file:
       - ../.env-docker
     command: ["/app/docker/bot.sh"]
+
+  prefect_flow:
+    container_name: prefect_flow
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        - PREFECT_API_KEY=${PREFECT_API_KEY}
+        - PREFECT_WORKSPACE_ID=${PREFECT_WORKSPACE_ID}
+    depends_on:
+      - postgres_db
+    env_file:
+      - ../.env-docker
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        source /app/.env-docker &&
+        make auth &&
+        make run
